@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/nav_inicio">
+
+    <!-- ARREGLADO: Añadido el paquete ".ui" -->
+    <fragment
+        android:id="@+id/nav_inicio"
+        android:name="itca.soft.renalcare.ui.inicio.InicioFragment"
+        android:label="Inicio"
+        tools:layout="@layout/fragment_inicio" />
+
+    <!-- ARREGLADO: Añadido el paquete ".ui" -->
+    <fragment
+        android:id="@+id/nav_chat"
+        android:name="itca.soft.renalcare.ui.chat.ChatFragment"
+        android:label="Chat"
+        tools:layout="@layout/fragment_chat" />
+
+    <!-- Este ya estaba correcto -->
+    <fragment
+        android:id="@+id/nav_alimentos"
+        android:name="itca.soft.renalcare.ui.alimentos.AlimentosFragment"
+        android:label="Alimentos"
+        tools:layout="@layout/fragment_alimentos" />
+
+    <!-- ARREGLADO: Añadido el paquete ".ui" -->
+    <fragment
+        android:id="@+id/nav_perfil"
+        android:name="itca.soft.renalcare.ui.perfil.PerfilFragment"
+        android:label="Perfil"
+        tools:layout="@layout/fragment_perfil" />
+
+</navigation>

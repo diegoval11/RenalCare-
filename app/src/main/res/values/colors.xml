@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="renal_dark_green">#36453B</color>
+    <color name="renal_blue_gray">#596869</color>
+    <color name="renal_dark_gray">#515751</color>
+    <color name="renal_light_cream">#F5F9E9</color>
+    <color name="renal_sand">#C2C1A5</color>
+
+    <color name="indicator_dot_color">#666666</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>

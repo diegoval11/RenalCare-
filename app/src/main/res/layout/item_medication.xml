@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    app:cardBackgroundColor="@color/renal_light_cream"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="0dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <CheckBox
+            android:id="@+id/cb_med_taken"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <ImageView
+            android:id="@+id/img_med_icon_bg"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/rounded_background_dark_gray"
+            app:layout_constraintStart_toEndOf="@id/cb_med_taken"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <ImageView
+            android:id="@+id/img_med_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_pill"
+            app:tint="@color/white"
+            app:layout_constraintBottom_toBottomOf="@id/img_med_icon_bg"
+            app:layout_constraintEnd_toEndOf="@id/img_med_icon_bg"
+            app:layout_constraintStart_toStartOf="@id/img_med_icon_bg"
+            app:layout_constraintTop_toTopOf="@id/img_med_icon_bg" />
+
+        <TextView
+            android:id="@+id/tv_med_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/img_med_icon_bg"
+            app:layout_constraintTop_toTopOf="@id/img_med_icon_bg"
+            tools:text="Sevelamer" />
+
+        <TextView
+            android:id="@+id/tv_med_dose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="@id/tv_med_name"
+            app:layout_constraintTop_toBottomOf="@id/tv_med_name"
+            tools:text="800 mg" />
+
+        <ImageView
+            android:id="@+id/img_med_time_icon"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginEnd="4dp"
+            android:src="@android:drawable/ic_menu_recent_history"
+            app:tint="@color/black"
+            app:layout_constraintEnd_toStartOf="@id/tv_med_time"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            android:id="@+id/tv_med_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:text="08:00 AM" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>
