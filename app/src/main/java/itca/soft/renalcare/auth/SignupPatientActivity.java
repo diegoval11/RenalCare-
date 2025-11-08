@@ -31,6 +31,7 @@ import org.json.JSONObject;
 
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
 import itca.soft.renalcare.R;
@@ -39,6 +40,15 @@ public class SignupPatientActivity extends AppCompatActivity {
 
     private static final String URL_REGISTRO = "http://192.168.1.12/wsrenalcare/signup_patient.php";
 
+    // --- Campos de la UI (Completados) ---
+    private TextInputLayout tilNombrePaciente, tilDuiPaciente, tilPinPaciente, tilPinConfirmPaciente;
+    private TextInputEditText etNombrePaciente, etDuiPaciente, etPinPaciente, etPinConfirmPaciente;
+    private RadioGroup rgTipoInsuficiencia, rgTipoDialisis;
+    private CheckBox cbBajoSodio, cbBajoPotasio, cbBajoFosforo, cbBajoProteinas;
+    private TextInputEditText etNombreContacto, etTelefonoContacto;
+    private Button btnRegisterPatient;
+
+    // --- Campos de Medicamentos (Ya los tenías) ---
     private LinearLayout containerMedicamentos;
     private Button btnAddMedicamento;
     private Button btnSkipMedicamentos;
@@ -51,15 +61,47 @@ public class SignupPatientActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_patient);
 
+        // --- Inicialización de campos personales ---
+        tilNombrePaciente = findViewById(R.id.tilNombrePaciente);
+        etNombrePaciente = findViewById(R.id.etNombrePaciente);
+        tilDuiPaciente = findViewById(R.id.tilDuiPaciente);
+        etDuiPaciente = findViewById(R.id.etDuiPaciente);
+        tilPinPaciente = findViewById(R.id.tilPinPaciente);
+        etPinPaciente = findViewById(R.id.etPinPaciente);
+        tilPinConfirmPaciente = findViewById(R.id.tilPinConfirmPaciente);
+        etPinConfirmPaciente = findViewById(R.id.etPinConfirmPaciente);
+
+        // --- Inicialización de campos médicos ---
+        rgTipoInsuficiencia = findViewById(R.id.rgTipoInsuficiencia);
+        rgTipoDialisis = findViewById(R.id.rgTipoDialisis);
+
+        // --- Inicialización de campos de dieta ---
+        cbBajoSodio = findViewById(R.id.cbBajoSodio);
+        cbBajoPotasio = findViewById(R.id.cbBajoPotasio);
+        cbBajoFosforo = findViewById(R.id.cbBajoFosforo);
+        cbBajoProteinas = findViewById(R.id.cbBajoProteinas);
+
+        // --- Inicialización de campos de contacto ---
+        etNombreContacto = findViewById(R.id.etNombreContacto);
+        etTelefonoContacto = findViewById(R.id.etTelefonoContacto);
+
+        // --- Inicialización de campos de medicamentos (Ya los tenías) ---
         containerMedicamentos = findViewById(R.id.containerMedicamentos);
         btnAddMedicamento = findViewById(R.id.btnAddMedicamento);
         btnSkipMedicamentos = findViewById(R.id.btnSkipMedicamentos);
         tvMedsOmitidos = findViewById(R.id.tvMedsOmitidos);
         btnMedicationInfo = findViewById(R.id.btnMedicationInfo);
 
+        // --- Inicialización del botón de registro ---
+        btnRegisterPatient = findViewById(R.id.btnRegisterPatient);
+
+        // --- Configuración de Listeners ---
         btnAddMedicamento.setOnClickListener(v -> agregarFilaMedicamento());
         btnSkipMedicamentos.setOnClickListener(v -> skipMedicamentos());
         btnMedicationInfo.setOnClickListener(v -> mostrarDialogoMedicamentos());
+
+        // ¡IMPORTANTE! Conectar el botón de registro a la función
+        btnRegisterPatient.setOnClickListener(v -> intentarRegistroPaciente());
     }
 
     private void skipMedicamentos() {
@@ -67,9 +109,7 @@ public class SignupPatientActivity extends AppCompatActivity {
         containerMedicamentos.setVisibility(View.GONE);
         btnAddMedicamento.setVisibility(View.GONE);
         btnSkipMedicamentos.setVisibility(View.GONE);
-
         tvMedsOmitidos.setVisibility(View.VISIBLE);
-
         containerMedicamentos.removeAllViews();
     }
 
@@ -77,10 +117,16 @@ public class SignupPatientActivity extends AppCompatActivity {
         if(medicamentosOmitidos) return;
 
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View filaView = inflater.inflate(R.layout.activity_signup_patient, null);
+
+        // --- ¡CORRECCIÓN CLAVE! ---
+        // Se infla "item_medicamento_input" (la fila) en lugar de "activity_signup_patient" (la pantalla entera).
+        // Se usa "containerMedicamentos" como padre (segundo parámetro) para que el ancho se ajuste correctamente,
+        // y "false" (tercer parámetro) para no adjuntarlo dos veces, ya que lo haremos manualmente con "addView".
+        final View filaView = inflater.inflate(R.layout.item_medicamento_input, containerMedicamentos, false);
 
         TextInputEditText etHorario = filaView.findViewById(R.id.etHorario);
-        etHorario.setInputType(0);
+        etHorario.setInputType(0); // Deshabilita el teclado
+        etHorario.setFocusable(false); // Evita que gane foco
         etHorario.setOnClickListener(v -> mostrarTimePickerDialog(etHorario));
 
         ImageButton btnEliminar = filaView.findViewById(R.id.btnEliminarFila);
@@ -99,14 +145,15 @@ public class SignupPatientActivity extends AppCompatActivity {
         TimePickerDialog timePicker = new TimePickerDialog(
                 this,
                 (view, hourOfDay, minute) -> {
+                    // Formato de 12 horas con AM/PM
                     String amPm = hourOfDay < 12 ? "AM" : "PM";
                     int hora12 = hourOfDay % 12;
-                    if (hora12 == 0) hora12 = 12;
+                    if (hora12 == 0) hora12 = 12; // Las 00:00 son las 12 AM
 
-                    String horarioFormato = String.format("%02d:%02d %s", hora12, minute, amPm);
+                    String horarioFormato = String.format(Locale.getDefault(), "%02d:%02d %s", hora12, minute, amPm);
                     etHorario.setText(horarioFormato);
                 },
-                hora, minuto, false
+                hora, minuto, false // false para formato 12 horas
         );
         timePicker.show();
     }
@@ -226,14 +273,9 @@ public class SignupPatientActivity extends AppCompatActivity {
         }
 
         // Enviar el array de medicamentos como un string JSON
-        // El PHP lo recibirá si no está vacío.
         if (medicamentosArray.length() > 0) {
             params.put("medicamentos_json", medicamentosArray.toString());
         }
-
-
-
-
 
         // --- 6. Enviar datos al Web Service ---
         AsyncHttpClient client = new AsyncHttpClient();
@@ -263,17 +305,25 @@ public class SignupPatientActivity extends AppCompatActivity {
                 String msg = "Error de red (" + statusCode + "): " + throwable.getMessage();
                 Toast.makeText(SignupPatientActivity.this, msg, Toast.LENGTH_LONG).show();
             }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                String msg = "Error de red (" + statusCode + "): " + throwable.getMessage();
+                Toast.makeText(SignupPatientActivity.this, msg, Toast.LENGTH_LONG).show();
+            }
         });
     }
 
     /**
      * Muestra un diálogo de Alerta con información sobre medicamentos.
-     * Lee los strings del nuevo archivo strings_meds.xml
+     * Asume que los strings están en strings.xml o un archivo similar.
      */
     private void mostrarDialogoMedicamentos() {
+        // Si tienes strings_meds.xml, asegúrate de que R.string.medication_info_title exista.
+        // Si no, reemplázalo con texto "hardcodeado" o un string genérico.
         new AlertDialog.Builder(this)
-                .setTitle(R.string.medication_info_title)
-                .setMessage(R.string.medication_info_details) // Esto ahora viene de strings_meds.xml
+                .setTitle("Info de Medicamentos") // Reemplaza con R.string.medication_info_title si existe
+                .setMessage("Añade los medicamentos que usas. Si no estás seguro, puedes omitir este paso y tu doctor los añadirá por ti.") // Reemplaza con R.string.medication_info_details
                 .setPositiveButton("Entendido", null)
                 .show();
     }
@@ -286,7 +336,9 @@ public class SignupPatientActivity extends AppCompatActivity {
         int idSeleccionado = radioGroup.getCheckedRadioButtonId();
         if (idSeleccionado != -1) {
             RadioButton rb = findViewById(idSeleccionado);
-            return rb.getText().toString();
+            if (rb != null) {
+                return rb.getText().toString();
+            }
         }
         return null; // Devuelve null si no hay nada seleccionado
     }
