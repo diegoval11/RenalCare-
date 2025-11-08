@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Este es el layout para cada fila de medicamento que se agrega dinámicamente.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp">
+
+    <!-- Contenedor para los campos de texto -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <!-- Nombre del Medicamento -->
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_nombre_medicamento"
+            android:textColorHint="@color/renal_dark_gray"
+            app:hintTextColor="@color/renal_dark_green"
+            app:boxStrokeColor="@color/renal_dark_green">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etNombreMedicamento"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapWords"
+                android:textColor="@color/renal_dark_gray"
+                android:textSize="16sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Dosis y Horario -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="4dp">
+
+            <!-- Dosis con sufijo "mg" no interactivo como ayuda visual -->
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/hint_dosis"
+                android:textColorHint="@color/renal_dark_gray"
+                app:hintTextColor="@color/renal_dark_green"
+                app:suffixText="@string/suffix_mg"
+                app:suffixTextColor="@color/renal_dark_gray"
+                app:boxStrokeColor="@color/renal_dark_green">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etDosis"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:textColor="@color/renal_dark_gray"
+                    android:textSize="14sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Horario con formato HH:MM AM/PM validado en código -->
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:hint="@string/hint_horario_formato"
+                android:textColorHint="@color/renal_dark_gray"
+                app:hintTextColor="@color/renal_dark_green"
+                app:boxStrokeColor="@color/renal_dark_green"
+                app:helperText="@string/helper_horario_formato">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etHorario"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:textColor="@color/renal_dark_gray"
+                    android:textSize="14sp"
+                    android:hint="HH:MM AM/PM" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Botón para eliminar esta fila -->
+    <ImageButton
+        android:id="@+id/btnEliminarFila"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@android:drawable/ic_delete"
+        app:tint="@color/error_red"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/content_desc_eliminar_medicamento"
+        android:layout_marginStart="8dp" />
+
+</LinearLayout>
