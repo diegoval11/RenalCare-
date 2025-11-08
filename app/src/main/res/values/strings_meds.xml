@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <!-- Título para el diálogo de información -->
+    <string name="medication_info_title">Medicamentos Comunes</string>
+
+    <!--
+    Esta es la lista completa y detallada de medicamentos comunes.
+    Se usa en el diálogo de información en la pantalla de registro de paciente.
+    -->
+    <string name="medication_info_details">
+    Esta es una lista de ejemplos. Consulta <b>SIEMPRE</b> a tu médico antes de tomar cualquier decisión.\n\n
+
+    💊 <b>1. Furosemida (Lasix)</b>\n
+    <b>Tipo:</b> Diurético de asa\n
+    <b>Uso:</b> Ayuda a eliminar el exceso de líquidos y reducir la presión arterial.\n\n
+
+    💊 <b>2. Eritropoyetina (EPO)</b>\n
+    <b>Tipo:</b> Hormona sintética (Eprex, Darbepoetina)\n
+    <b>Uso:</b> Trata la anemia causada por la falta de producción de esta hormona en el riñón.\n\n
+
+    💊 <b>3. Quelantes de Fósforo</b>\n
+    <b>Tipo:</b> Carbonato de Calcio, Sevelamer (Renagel)\n
+    <b>Uso:</b> Controlan los niveles altos de fósforo en sangre, que causan daño a los huesos.\n\n
+
+    💊 <b>4. Calcitriol (Vitamina D activa)</b>\n
+    <b>Uso:</b> Corrige la deficiencia de vitamina D y ayuda a mantener niveles adecuados de calcio.\n\n
+
+    💊 <b>5. Hierro (Oral o IV)</b>\n
+    <b>Tipo:</b> Sulfato ferroso, Gluconato férrico\n
+    <b>Uso:</b> Complementa la EPO para formar glóbulos rojos y combatir la anemia.\n\n
+
+    💊 <b>6. Antihipertensivos (IECA o ARA II)</b>\n
+    <b>Ejemplos:</b> Enalapril, Losartán, Valsartán\n
+    <b>Uso:</b> Controlan la presión arterial y ayudan a retrasar el daño renal.\n\n
+
+    💊 <b>7. Bicarbonato de Sodio</b>\n
+    <b>Uso:</b> Corrige la acidosis metabólica (exceso de ácido en sangre) cuando los riñones no pueden eliminarlo.\n\n
+
+    💊 <b>8. Estatinas</b>\n
+    <b>Ejemplos:</b> Atorvastatina, Rosuvastatina\n
+    <b>Uso:</b> Reducen el colesterol alto, un riesgo cardiovascular común en pacientes renales.\n\n
+
+    💊 <b>9. Insulina (o antidiabéticos ajustados)</b>\n
+    <b>Uso:</b> Control estricto de la glucosa en pacientes con diabetes (causa N°1 de falla renal).\n\n
+
+    💊 <b>10. Antieméticos / Laxantes</b>\n
+    <b>Uso:</b> Alivian síntomas digestivos (náuseas, estreñimiento) causados por la uremia o la dieta.
+</string>
+
+
+</resources>

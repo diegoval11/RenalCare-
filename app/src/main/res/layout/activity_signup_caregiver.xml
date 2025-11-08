@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:background="@color/renal_light_cream"
+tools:context=".auth.SignupCaregiverActivity">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_signup_caregiver"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="@color/renal_dark_green"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="24dp"/>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/imgProfile"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/ic_profile"
+        android:layout_gravity="center_horizontal"
+        app:civ_border_width="2dp"
+        app:civ_border_color="@color/renal_dark_green"/>
+
+    <Button
+        android:id="@+id/btnUploadPhoto"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="24dp"
+        android:text="@string/action_upload_photo"
+        android:textColor="@color/renal_dark_green" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilNombreCuidador"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_full_name"
+        android:textColorHint="@color/renal_dark_gray"
+        app:boxStrokeColor="@color/renal_dark_green"
+        app:hintTextColor="@color/renal_dark_green">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etNombreCuidador"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:textColor="@color/renal_dark_gray" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilDuiCuidador"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+
+        android:hint="@string/hint_dui"
+        android:textColorHint="@color/renal_dark_gray"
+        app:boxStrokeColor="@color/renal_dark_green"
+        app:hintTextColor="@color/renal_dark_green">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etDuiCuidador"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:inputType="number"
+            android:maxLength="10"
+            android:textColor="@color/renal_dark_gray" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilParentesco"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="@string/hint_relationship"
+        android:textColorHint="@color/renal_dark_gray"
+        app:boxStrokeColor="@color/renal_dark_green"
+        app:hintTextColor="@color/renal_dark_green">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etParentesco"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:textColor="@color/renal_dark_gray" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <!-- CAMPO DE TELÉFONO -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilTelefonoCuidador"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="Teléfono de Contacto"
+        android:textColorHint="@color/renal_dark_gray"
+        app:boxStrokeColor="@color/renal_dark_green"
+        app:hintTextColor="@color/renal_dark_green">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etTelefonoCuidador"
+            android:layout_width="match_parent"
+            android:maxLength="8"
+            android:layout_height="wrap_content"
+            android:inputType="phone"
+            android:textColor="@color/renal_dark_gray" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilPinCuidador"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="@string/hint_pin_numeric"
+        android:textColorHint="@color/renal_dark_gray"
+        app:boxStrokeColor="@color/renal_dark_green"
+        app:hintTextColor="@color/renal_dark_green"
+        app:passwordToggleEnabled="true"
+        app:passwordToggleTint="@color/renal_dark_green">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etPinCuidador"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberPassword"
+            android:textColor="@color/renal_dark_gray" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilPinConfirmCuidador"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="@string/hint_pin_confirm"
+        android:textColorHint="@color/renal_dark_gray"
+        app:boxStrokeColor="@color/renal_dark_green"
+        app:hintTextColor="@color/renal_dark_green"
+        app:passwordToggleEnabled="true"
+        app:passwordToggleTint="@color/renal_dark_green">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etPinConfirmCuidador"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberPassword"
+            android:textColor="@color/renal_dark_gray" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/btnRegisterCaregiver"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:padding="12dp"
+        android:text="@string/action_register"
+        android:backgroundTint="@color/renal_blue_gray"
+        android:textColor="@color/renal_light_cream"
+        android:textSize="16sp" />
+
+</LinearLayout>
+</ScrollView>
