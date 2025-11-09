@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    tools:context=".auth.steps.Step5ReviewFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            style="@style/SignupSectionHeader"
+            android:layout_width="match_parent"
+            android:text="@string/step5_revisa_tus_datos"
+            android:textSize="24sp"
+            android:layout_marginBottom="8dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/confirmar_y_registrar"
+            android:textColor="@color/renal_medium_gray"
+            android:layout_marginBottom="24dp"/>
+
+        <TextView style="@style/SignupSectionHeader" android:text="@string/_1_tu_cuenta" android:textSize="18sp"/>
+        <TextView android:id="@+id/tvReviewNombre" android:layout_width="wrap_content" android:layout_height="wrap_content" tools:text="Nombre: Juan Pérez" style="@style/ReviewTextStyle"/>
+        <TextView android:id="@+id/tvReviewDui" android:layout_width="wrap_content" android:layout_height="wrap_content" tools:text="DUI: 12345678-9" style="@style/ReviewTextStyle"/>
+
+        <TextView style="@style/SignupSectionHeader" android:text="@string/_2_datos_personales" android:textSize="18sp"/>
+        <TextView android:id="@+id/tvReviewFechaNac" android:layout_width="wrap_content" android:layout_height="wrap_content" tools:text="Nacimiento: 1990-01-01" style="@style/ReviewTextStyle"/>
+        <TextView android:id="@+id/tvReviewGenero" android:layout_width="wrap_content" android:layout_height="wrap_content" tools:text="Género: Masculino" style="@style/ReviewTextStyle"/>
+        <TextView android:id="@+id/tvReviewContacto" android:layout_width="wrap_content" android:layout_height="wrap_content" tools:text="Contacto: Ana Pérez (7777-8888)" style="@style/ReviewTextStyle"/>
+
+        <TextView style="@style/SignupSectionHeader" android:text="@string/_3_condici_n_m_dica" android:textSize="18sp"/>
+        <TextView android:id="@+id/tvReviewCondicion" android:layout_width="wrap_content" android:layout_height="wrap_content" tools:text="Condición: Crónica" style="@style/ReviewTextStyle"/>
+        <TextView android:id="@+id/tvReviewTratamiento" android:layout_width="wrap_content" android:layout_height="wrap_content" tools:text="Tratamiento: Hemodiálisis" style="@style/ReviewTextStyle"/>
+        <TextView android:id="@+id/tvReviewPeso" android:layout_width="wrap_content" android:layout_height="wrap_content" tools:text="Peso: 150.5 lbs" style="@style/ReviewTextStyle"/>
+        <TextView android:id="@+id/tvReviewCreatinina" android:layout_width="wrap_content" android:layout_height="wrap_content" tools:text="Creatinina: 5.2 mg/dL" style="@style/ReviewTextStyle"/>
+
+        <TextView style="@style/SignupSectionHeader" android:text="@string/_4_tratamiento" android:textSize="18sp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Medicamentos:"
+            android:textColor="@color/renal_dark_green"
+            android:layout_marginTop="4dp"/>
+        <TextView android:id="@+id/tvReviewMedicamentos" android:layout_width="wrap_content" android:layout_height="wrap_content" tools:text="• Eritropoyetina (4000 UI) - 08:00 AM\n• Losartán (50 mg) - 12:00 PM" style="@style/ReviewTextStyle" android:paddingStart="8dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dieta:"
+            android:textColor="@color/renal_dark_green"
+            android:layout_marginTop="8dp"/>
+        <TextView android:id="@+id/tvReviewDieta" android:layout_width="wrap_content" android:layout_height="wrap_content" tools:text="• Bajo sodio, Bajo potasio" style="@style/ReviewTextStyle" android:paddingStart="8dp"/>
+
+    </LinearLayout>
+</ScrollView>

@@ -1,26 +1,18 @@
 package itca.soft.renalcare.auth;
 
-import android.app.AlertDialog;
-import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.viewpager2.widget.ViewPager2;
 
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -29,217 +21,229 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Arrays;
-import java.util.Calendar;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 import cz.msebera.android.httpclient.Header;
 import itca.soft.renalcare.R;
 
 public class SignupPatientActivity extends AppCompatActivity {
 
-    private static final String URL_REGISTRO = "http://192.168.1.12/wsrenalcare/signup_patient.php";
 
-    private LinearLayout containerMedicamentos;
-    private Button btnAddMedicamento;
-    private Button btnSkipMedicamentos;
-    private TextView tvMedsOmitidos;
-    private ImageButton btnMedicationInfo;
-    private boolean medicamentosOmitidos = false;
+
+    private static final String URL_REGISTRO_WIZARD = "http://192.168.1.12/wsrenalcare/signup_patient_wizard.php"; // ¡NUEVO ENDPOINT!
+    private static final int NUM_STEPS = 5;
+    private static final String TAG = "SignupActivity";
+    private ViewPager2 viewPager;
+    private Button btnBack, btnNext;
+    private LinearProgressIndicator progressIndicator;
+
+    private SignupPatientViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_patient);
 
-        containerMedicamentos = findViewById(R.id.containerMedicamentos);
-        btnAddMedicamento = findViewById(R.id.btnAddMedicamento);
-        btnSkipMedicamentos = findViewById(R.id.btnSkipMedicamentos);
-        tvMedsOmitidos = findViewById(R.id.tvMedsOmitidos);
-        btnMedicationInfo = findViewById(R.id.btnMedicationInfo);
+        // --- 1. Inicializar el ViewModel ---
+        viewModel = new ViewModelProvider(this).get(SignupPatientViewModel.class);
 
-        btnAddMedicamento.setOnClickListener(v -> agregarFilaMedicamento());
-        btnSkipMedicamentos.setOnClickListener(v -> skipMedicamentos());
-        btnMedicationInfo.setOnClickListener(v -> mostrarDialogoMedicamentos());
-    }
+        // --- 2. Encontrar Vistas de la Activity ---
+        viewPager = findViewById(R.id.viewPager);
+        btnBack = findViewById(R.id.btnBack);
+        btnNext = findViewById(R.id.btnNext);
+        progressIndicator = findViewById(R.id.progressIndicator);
 
-    private void skipMedicamentos() {
-        medicamentosOmitidos = true;
-        containerMedicamentos.setVisibility(View.GONE);
-        btnAddMedicamento.setVisibility(View.GONE);
-        btnSkipMedicamentos.setVisibility(View.GONE);
+        // --- 3. Configurar el ViewPager ---
+        SignupWizardAdapter adapter = new SignupWizardAdapter(this);
+        viewPager.setAdapter(adapter);
 
-        tvMedsOmitidos.setVisibility(View.VISIBLE);
+        // ¡Deshabilitar el deslizamiento manual! Forzamos a usar los botones.
+        viewPager.setUserInputEnabled(false);
 
-        containerMedicamentos.removeAllViews();
-    }
+        // ¡Aplicar la animación elegante!
+        viewPager.setPageTransformer(new ZoomFadePageTransformer());
 
-    private void agregarFilaMedicamento() {
-        if(medicamentosOmitidos) return;
+        // --- 4. Configurar Listeners de Navegación ---
+        btnNext.setOnClickListener(v -> handleNextClick());
+        btnBack.setOnClickListener(v -> handleBackClick());
 
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View filaView = inflater.inflate(R.layout.activity_signup_patient, null);
-
-        TextInputEditText etHorario = filaView.findViewById(R.id.etHorario);
-        etHorario.setInputType(0);
-        etHorario.setOnClickListener(v -> mostrarTimePickerDialog(etHorario));
-
-        ImageButton btnEliminar = filaView.findViewById(R.id.btnEliminarFila);
-        btnEliminar.setOnClickListener(v -> {
-            ((LinearLayout)filaView.getParent()).removeView(filaView);
+        // Actualizar UI (botones/progreso) cuando la página cambie
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                updateNavigationUI(position);
+            }
         });
 
-        containerMedicamentos.addView(filaView);
+        // Iniciar la UI
+        updateNavigationUI(0);
     }
 
-    private void mostrarTimePickerDialog(TextInputEditText etHorario) {
-        Calendar cal = Calendar.getInstance();
-        int hora = cal.get(Calendar.HOUR_OF_DAY);
-        int minuto = cal.get(Calendar.MINUTE);
-
-        TimePickerDialog timePicker = new TimePickerDialog(
-                this,
-                (view, hourOfDay, minute) -> {
-                    String amPm = hourOfDay < 12 ? "AM" : "PM";
-                    int hora12 = hourOfDay % 12;
-                    if (hora12 == 0) hora12 = 12;
-
-                    String horarioFormato = String.format("%02d:%02d %s", hora12, minute, amPm);
-                    etHorario.setText(horarioFormato);
-                },
-                hora, minuto, false
-        );
-        timePicker.show();
+    private void handleBackClick() {
+        int currentItem = viewPager.getCurrentItem();
+        if (currentItem > 0) {
+            viewPager.setCurrentItem(currentItem - 1);
+        }
     }
 
+    private void handleNextClick() {
+        int currentItem = viewPager.getCurrentItem();
+
+        // Validar el paso actual ANTES de avanzar
+        if (!validateStep(currentItem)) {
+            return; // Detener si la validación falla
+        }
+
+        if (currentItem < NUM_STEPS - 1) {
+            // Avanzar al siguiente paso
+            viewPager.setCurrentItem(currentItem + 1);
+        } else {
+            // Estamos en el último paso (Revisión), el botón es "Registrar"
+            intentarRegistroPaciente();
+        }
+    }
+
+    /**
+     * Valida los datos del ViewModel para el paso actual.
+     */
+    private boolean validateStep(int position) {
+        switch (position) {
+            case 0: // Paso 1: Cuenta
+                String nombre = viewModel.nombre.getValue();
+                String dui = viewModel.dui.getValue();
+                String pass = viewModel.password.getValue();
+                // (Necesitarás un campo 'confirmPassword' en el Fragment 1, aquí asumimos que ya está validado)
+                if (TextUtils.isEmpty(nombre) || TextUtils.isEmpty(dui) || TextUtils.isEmpty(pass)) {
+                    Toast.makeText(this, "Nombre, DUI y Contraseña son obligatorios", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+                if (pass.length() < 5) {
+                    Toast.makeText(this, "La contraseña debe tener al menos 5 caracteres", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+                // Aquí también deberías validar que "pass == confirmPass" (lógica en el Fragment 1)
+                return true;
+
+            case 1: // Paso 2: Personal
+                // Todos los campos son opcionales o se validan con picker (fecha/género)
+                return true;
+
+            case 2: // Paso 3: Médico
+                // Todos los campos tienen opción "No sé"
+                return true;
+
+            case 3: // Paso 4: Tratamiento
+                // Todos los campos son opcionales
+                return true;
+
+            case 4: // Paso 5: Revisión
+                return true;
+        }
+        return false;
+    }
+
+
+    /**
+     * Actualiza la visibilidad de los botones y el texto del botón "Next".
+     */
+    private void updateNavigationUI(int position) {
+        // Progreso (20% por paso, 100 / 5 = 20)
+        progressIndicator.setProgress((position + 1) * (100 / NUM_STEPS), true);
+
+        // Botón "Atrás"
+        btnBack.setVisibility(position == 0 ? View.INVISIBLE : View.VISIBLE);
+
+        // Botón "Siguiente"
+        if (position == NUM_STEPS - 1) {
+            btnNext.setText(R.string.action_register_final); // Ej: "Confirmar y Registrar"
+        } else {
+            btnNext.setText(R.string.action_next); // Ej: "Siguiente"
+        }
+    }
+
+    /**
+     * Construye el JSON y lo envía al servidor.
+     */
     private void intentarRegistroPaciente() {
-        // --- 1. Obtener datos de campos de texto ---
-        String nombreCompleto = etNombrePaciente.getText().toString().trim();
-        String dui = etDuiPaciente.getText().toString().trim();
-        String pin = etPinPaciente.getText().toString().trim();
-        String pinConfirm = etPinConfirmPaciente.getText().toString().trim();
-        String contactoNombre = etNombreContacto.getText().toString().trim();
-        String contactoTelefono = etTelefonoContacto.getText().toString().trim();
+        // --- 1. Construir el objeto JSON principal ---
+        JSONObject data = new JSONObject();
+        try {
+            // --- Objeto Usuario (Paso 1) ---
+            JSONObject usuario = new JSONObject();
+            usuario.put("nombre", viewModel.nombre.getValue());
+            usuario.put("dui", viewModel.dui.getValue());
+            usuario.put("password", viewModel.password.getValue()); // El backend hará el hash
+            usuario.put("telefono", viewModel.telefono.getValue());
+            data.put("usuario", usuario);
 
-        // --- 2. Validaciones básicas (Campos obligatorios) ---
-        tilNombrePaciente.setError(null);
-        tilDuiPaciente.setError(null);
-        tilPinPaciente.setError(null);
-        tilPinConfirmPaciente.setError(null);
+            // --- Objeto Paciente (Paso 2 y 3) ---
+            JSONObject paciente = new JSONObject();
+            paciente.put("fecha_nacimiento", viewModel.fechaNacimiento.getValue());
+            paciente.put("genero", viewModel.genero.getValue());
+            paciente.put("contacto_emergencia", viewModel.contactoNombre.getValue());
+            paciente.put("telefono_emergencia", viewModel.contactoTelefono.getValue());
 
-        boolean esValido = true;
-        if (TextUtils.isEmpty(nombreCompleto)) {
-            tilNombrePaciente.setError("El nombre es obligatorio");
-            esValido = false;
-        }
-        if (TextUtils.isEmpty(dui)) {
-            tilDuiPaciente.setError("El DUI es obligatorio");
-            esValido = false;
-        }
-        if (TextUtils.isEmpty(pin)) {
-            tilPinPaciente.setError("El PIN es obligatorio");
-            esValido = false;
-        }
-        if (TextUtils.isEmpty(pinConfirm)) {
-            tilPinConfirmPaciente.setError("Confirma tu PIN");
-            esValido = false;
-        }
-        if (!pin.equals(pinConfirm)) {
-            tilPinPaciente.setError("Los PIN no coinciden");
-            tilPinConfirmPaciente.setError("Los PIN no coinciden");
-            esValido = false;
-        }
+            paciente.put("condicion_renal", viewModel.condicionRenal.getValue());
+            paciente.put("tipo_tratamiento", viewModel.tipoTratamiento.getValue());
 
-        if (!esValido) {
-            Toast.makeText(this, "Completa los campos obligatorios", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // --- 3. Preparar datos para el Web Service ---
-        String[] partesNombre = nombreCompleto.split(" ");
-        String nombre = "";
-        String apellido = "";
-
-        if (partesNombre.length > 0) {
-            nombre = partesNombre[0];
-            if (partesNombre.length > 1) {
-                apellido = TextUtils.join(" ", Arrays.copyOfRange(partesNombre, 1, partesNombre.length));
+            if (Boolean.FALSE.equals(viewModel.pesoOmitido.getValue())) {
+                paciente.put("peso", viewModel.peso.getValue());
             }
-        }
-        if (apellido.isEmpty()) {
-            tilNombrePaciente.setError("Ingresa al menos un nombre y un apellido");
-            return;
-        }
+            if (Boolean.FALSE.equals(viewModel.creatininaOmitida.getValue())) {
+                paciente.put("nivel_creatinina", viewModel.creatinina.getValue());
+            }
+            data.put("paciente", paciente);
 
-        // --- 4. Obtener datos de RadioButtons y CheckBoxes ---
-        String tipoInsuficiencia = getTextoRadioSeleccionado(rgTipoInsuficiencia);
-        String tipoDialisis = getTextoRadioSeleccionado(rgTipoDialisis);
-
-        // --- 5. Construir los parámetros de la solicitud ---
-        RequestParams params = new RequestParams();
-
-        // Datos Personales
-        params.put("nombre", nombre);
-        params.put("apellido", apellido);
-        params.put("dui", dui);
-        params.put("pin", pin);
-
-        // Datos Médicos
-        params.put("tipo_insuficiencia", tipoInsuficiencia);
-        params.put("tipo_dialisis", tipoDialisis);
-
-        // Dieta
-        if (cbBajoSodio.isChecked()) params.put("dieta_sodio", "1");
-        if (cbBajoPotasio.isChecked()) params.put("dieta_potasio", "1");
-        if (cbBajoFosforo.isChecked()) params.put("dieta_fosforo", "1");
-        if (cbBajoProteinas.isChecked()) params.put("dieta_proteinas", "1");
-
-        // Contacto de Emergencia
-        params.put("contacto_nombre", contactoNombre);
-        params.put("contacto_telefono", contactoTelefono);
-
-        // --- ¡NUEVO! Recolectar Medicamentos ---
-        JSONArray medicamentosArray = new JSONArray();
-        if (!medicamentosOmitidos) {
-            for (int i = 0; i < containerMedicamentos.getChildCount(); i++) {
-                View filaView = containerMedicamentos.getChildAt(i);
-                TextInputEditText etNombreMed = filaView.findViewById(R.id.etNombreMedicamento);
-                TextInputEditText etDosisMed = filaView.findViewById(R.id.etDosis);
-                TextInputEditText etHorarioMed = filaView.findViewById(R.id.etHorario);
-
-                String nombreMed = etNombreMed.getText().toString().trim();
-                String dosis = etDosisMed.getText().toString().trim();
-                String horario = etHorarioMed.getText().toString().trim();
-
-                // Solo agregar si el nombre del medicamento no está vacío
-                if (!TextUtils.isEmpty(nombreMed)) {
+            // --- Array de Medicamentos (Paso 4) ---
+            JSONArray medicamentosArray = new JSONArray();
+            List<Medicamento> medList = viewModel.medicamentos.getValue();
+            if (Boolean.FALSE.equals(viewModel.medicamentosOmitidos.getValue()) && medList != null) {
+                for (Medicamento med : medList) {
                     JSONObject medJson = new JSONObject();
-                    try {
-                        medJson.put("nombre", nombreMed);
-                        medJson.put("dosis", dosis);
-                        medJson.put("horario", horario);
-                        medicamentosArray.put(medJson);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    medJson.put("nombre", med.nombre);
+                    medJson.put("dosis", med.dosis);
+                    medJson.put("horario", med.horario); // Ej: "08:30 AM"
+                    medicamentosArray.put(medJson);
                 }
             }
+            data.put("medicamentos", medicamentosArray);
+
+            // --- Array de Dieta (Paso 4) (La "Traducción") ---
+            JSONArray dietaArray = new JSONArray();
+            Set<String> dietaSet = viewModel.dieta.getValue();
+            if (dietaSet != null) {
+                for (String restriccion : dietaSet) {
+                    dietaArray.put(restriccion); // Ej: "Bajo sodio", "Bajo potasio"
+                }
+            }
+            data.put("dieta", dietaArray);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Error al construir los datos", Toast.LENGTH_SHORT).show();
+            return;
         }
 
-        // Enviar el array de medicamentos como un string JSON
-        // El PHP lo recibirá si no está vacío.
-        if (medicamentosArray.length() > 0) {
-            params.put("medicamentos_json", medicamentosArray.toString());
-        }
+        // --- 2. Configurar Parámetros para loopj ---
+        RequestParams params = new RequestParams();
+        // Enviamos todo el JSON como un solo parámetro de texto
+        params.put("signup_data", data.toString());
 
+        // (Mostrar un diálogo de "Cargando...")
 
-
-
-
-        // --- 6. Enviar datos al Web Service ---
+        // --- 3. Enviar al Web Service ---
         AsyncHttpClient client = new AsyncHttpClient();
-        client.post(URL_REGISTRO, params, new JsonHttpResponseHandler() {
+
+        Log.d(TAG, "Enviando datos a " + URL_REGISTRO_WIZARD);
+        Log.d(TAG, "Parámetros: " + params.toString());
+
+        client.post(URL_REGISTRO_WIZARD, params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                // (Ocultar "Cargando...")
                 try {
                     boolean exito = response.getBoolean("exito");
                     if (exito) {
@@ -260,34 +264,24 @@ public class SignupPatientActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                // (Ocultar "Cargando...")
                 String msg = "Error de red (" + statusCode + "): " + throwable.getMessage();
                 Toast.makeText(SignupPatientActivity.this, msg, Toast.LENGTH_LONG).show();
             }
+
+            // ... (otros métodos onFailure)
         });
     }
 
-    /**
-     * Muestra un diálogo de Alerta con información sobre medicamentos.
-     * Lee los strings del nuevo archivo strings_meds.xml
-     */
-    private void mostrarDialogoMedicamentos() {
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.medication_info_title)
-                .setMessage(R.string.medication_info_details) // Esto ahora viene de strings_meds.xml
-                .setPositiveButton("Entendido", null)
-                .show();
-    }
-
-    /**
-     * Método de ayuda para obtener el texto de un RadioButton seleccionado
-     * dentro de un RadioGroup.
-     */
-    private String getTextoRadioSeleccionado(RadioGroup radioGroup) {
-        int idSeleccionado = radioGroup.getCheckedRadioButtonId();
-        if (idSeleccionado != -1) {
-            RadioButton rb = findViewById(idSeleccionado);
-            return rb.getText().toString();
+    // Prevenir que el botón "Atrás" del sistema cierre la app (lo hace retroceder en el wizard)
+    @Override
+    public void onBackPressed() {
+        if (viewPager.getCurrentItem() == 0) {
+            // Si está en el primer paso, dejar que el sistema maneje el "Atrás" (cerrar)
+            super.onBackPressed();
+        } else {
+            // Si no, retroceder un paso
+            handleBackClick();
         }
-        return null; // Devuelve null si no hay nada seleccionado
     }
 }

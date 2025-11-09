@@ -46,7 +46,10 @@ dependencies {
     // RecyclerView (para las listas)
 
 
-    //
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel:2.7.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata:2.7.0'
+    implementation 'androidx.fragment:fragment:1.6.2'
     implementation 'com.loopj.android:android-async-http:1.4.11'
 
     testImplementation libs.junit
