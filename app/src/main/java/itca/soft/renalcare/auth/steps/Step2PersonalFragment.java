@@ -75,8 +75,6 @@ public class Step2PersonalFragment extends Fragment {
                 rgGenero.check(R.id.rbMasculino);
             } else if (generoGuardado.equals("femenino")) {
                 rgGenero.check(R.id.rbFemenino);
-            } else if (generoGuardado.equals("otro")) {
-                rgGenero.check(R.id.rbOtro);
             }
         }
     }
@@ -91,8 +89,6 @@ public class Step2PersonalFragment extends Fragment {
                 viewModel.genero.setValue("masculino");
             } else if (checkedId == R.id.rbFemenino) {
                 viewModel.genero.setValue("femenino");
-            } else if (checkedId == R.id.rbOtro) {
-                viewModel.genero.setValue("otro");
             }
         });
 
