@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    tools:context=".auth.steps.Step4TreatmentFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            style="@style/SignupSectionHeader"
+            android:layout_width="match_parent"
+            android:text="@string/step3_tu_tratamiento"
+            android:textSize="24sp"
+            android:layout_marginBottom="16dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <TextView style="@style/SignupSectionHeader"
+                android:text="@string/patient_section_meds"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_marginBottom="0dp"
+                android:layout_marginTop="0dp"
+                android:textSize="20sp"/>
+            <ImageButton
+                android:id="@+id/btnMedicationInfo"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@android:drawable/ic_dialog_info"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/renal_blue_gray"
+                android:contentDescription="@string/info_de_medicamentos"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/containerMedicamentos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="8dp" />
+
+        <Button
+            android:id="@+id/btnAddMedicamento"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/agregar_medicamento"
+            android:textColor="@color/renal_dark_green"
+            android:textSize="14sp"
+            android:layout_gravity="start"/>
+
+        <Button
+            android:id="@+id/btnSkipMedicamentos"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/mi_doctor_decidir_esto"
+            android:textSize="14sp"
+            app:strokeColor="@color/renal_blue_gray"
+            android:textColor="@color/renal_blue_gray" />
+
+        <TextView
+            android:id="@+id/tvMedsOmitidos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/mensaje_feedback_deldoctor"
+            android:textColor="@color/success_green"
+            android:visibility="gone"
+            android:layout_marginTop="8dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/renal_sand_light"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"/>
+
+        <TextView style="@style/SignupSectionHeader"
+            android:text="@string/patient_section_diet"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/patient_diet_q1"
+            android:textColor="@color/renal_dark_gray"/>
+        <CheckBox android:id="@+id/cbBajoSodio" android:layout_width="wrap_content" android:layout_height="wrap_content" android:buttonTint="@color/renal_dark_green" android:text="@string/patient_diet_opt1" android:textColor="@color/renal_dark_gray"/>
+        <CheckBox android:id="@+id/cbBajoPotasio" android:layout_width="wrap_content" android:layout_height="wrap_content" android:buttonTint="@color/renal_dark_green" android:text="@string/patient_diet_opt2" android:textColor="@color/renal_dark_gray"/>
+        <CheckBox android:id="@+id/cbBajoFosforo" android:layout_width="wrap_content" android:layout_height="wrap_content" android:buttonTint="@color/renal_dark_green" android:text="@string/patient_diet_opt3" android:textColor="@color/renal_dark_gray"/>
+        <CheckBox android:id="@+id/cbBajoProteinas" android:layout_width="wrap_content" android:layout_height="wrap_content" android:buttonTint="@color/renal_dark_green" android:text="@string/patient_diet_opt4" android:textColor="@color/renal_dark_gray"/>
+
+    </LinearLayout>
+</ScrollView>

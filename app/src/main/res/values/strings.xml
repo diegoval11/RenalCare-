@@ -72,7 +72,38 @@
     <string name="hint_horario_formato">Horario (ej: 08:00 AM)</string>
     <string name="helper_horario_formato">Formato: HH:MM AM/PM. Ejemplo: 08:00 AM, 02:30 PM</string>
     <string name="content_desc_eliminar_medicamento">Eliminar medicamento</string>
-
+    <string name="hint_password_confirm">Confirme su contraseña</string>
+    <string name="hint_password_new">Ingrese su contraseña</string>
+    <string name="action_back">Atras</string>
+    <string name="action_next">Siguiente</string>
+    <string name="action_register_final">Confirmar y Registrar</string>
+    <string name="tel_contacto_emergencia">Teléfono del Contacto</string>
+    <string name="nombre_del_contacto">Nombre del Contacto</string>
+    <string name="texto_contacto_emergencia">Contacto de Emergencia (Opcional)</string>
+    <string name="otro">Otro</string>
+    <string name="femenino">Femenino</string>
+    <string name="masculino">Masculino</string>
+    <string name="texto_pregunta_genero">¿Cuál es tu género?</string>
+    <string name="step2_datos_personales">Paso 2: Tus Datos Personales</string>
+    <string name="fecha_de_nacimiento">Fecha de Nacimiento</string>
+    <string name="no_tengo_este_dato">No tengo este dato</string>
+    <string name="ejemplo_creatina">Nivel de Creatinina (ej: 4.8)</string>
+    <string name="no_se_mi_peso">No sé mi peso ahora</string>
+    <string name="tu_peso_en_libras">Tu peso más reciente (en libras)</string>
+    <string name="pregunta_tratamiento">¿Recibes algún tratamiento principal?</string>
+    <string name="pregunta_condicion_ren">Aprox. ¿Cuál es tu condición renal?</string>
+    <string name="step3_condicion_medica">Paso 3: Tu Condición Médica</string>
+    <string name="mensaje_feedback_deldoctor">✓ Medicamentos serán añadidos por tu doctor.</string>
+    <string name="mi_doctor_decidir_esto">Mi doctor decidirá esto</string>
+    <string name="agregar_medicamento">+ Agregar Medicamento</string>
+    <string name="info_de_medicamentos">Información de medicamentos</string>
+    <string name="step3_tu_tratamiento">Paso 4: Tu Tratamiento</string>
+    <string name="_1_tu_cuenta">1. Tu Cuenta</string>
+    <string name="_2_datos_personales">2. Datos Personales</string>
+    <string name="_3_condici_n_m_dica">3. Condición Médica</string>
+    <string name="_4_tratamiento">4. Tratamiento</string>
+    <string name="confirmar_y_registrar">Presiona \'Confirmar y Registrar\' si todo es correcto.</string>
+    <string name="step5_revisa_tus_datos">Paso 5: Revisa tus Datos</string>
 
 
 </resources>
