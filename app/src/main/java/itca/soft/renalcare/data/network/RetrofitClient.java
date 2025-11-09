@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import java.util.concurrent.TimeUnit;
 
 public class RetrofitClient {
-    private static final String BASE_URL = "http://192.168.10.102:3000/"; // ⚠️ Cambiar por tu IP
+    private static final String BASE_URL = "http://192.168.1.12:3000/"; // ⚠️ Cambiar por tu IP
     private static Retrofit retrofit;
 
     public static Retrofit getClient() {

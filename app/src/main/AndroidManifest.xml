@@ -2,6 +2,47 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Network and device hardware permissions -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <!--
+      It's good practice to declare hardware features.
+      android:required="false" means the app can be installed
+      even if the device doesn't have a camera or microphone.
+    -->
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature android:name="android.hardware.microphone" android:required="false" />
+
+    <!--
+      Permissions for Android 13 (API 33) and above.
+      These are the granular media permissions that replace READ_EXTERNAL_STORAGE.
+    -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <!-- Add READ_MEDIA_VIDEO if you also need to access videos -->
+    <!-- <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" /> -->
+
+    <!--
+      Permission for older devices (Android 12L / API 32 and below).
+      The maxSdkVersion attribute ensures this permission is only requested on older versions
+      where the granular media permissions are not available.
+    -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
+    <!--
+      The WRITE_EXTERNAL_STORAGE permission is no longer needed for most apps
+      targeting modern Android versions due to Scoped Storage.
+      Only keep this if you have a specific legacy need and understand its limitations.
+      The maxSdkVersion="28" correctly limits it to very old APIs.
+    -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28"
+        tools:ignore="ScopedStorage" />
+
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -10,16 +51,53 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.RenalCare">
+        android:theme="@style/Theme.RenalCare"
+        android:usesCleartextTraffic="true"
+        tools:targetApi="31">
+
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
         <activity
-            android:name=".MainActivity"
-            android:exported="true">
+            android:name=".auth.LoginActivity"
+            android:exported="true"
+            android:theme="@style/Theme.RenalCare">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".auth.RoleSelectionActivity"
+            android:exported="false"
+            android:theme="@style/Theme.RenalCare" />
+        <activity
+            android:name=".auth.SignupCaregiverActivity"
+            android:exported="false"
+            android:theme="@style/Theme.RenalCare" />
+        <activity
+            android:name=".auth.SignupPatientActivity"
+            android:exported="false"
+            android:theme="@style/Theme.RenalCare" />
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.RenalCare">
+            <!-- If this activity can be launched from an intent, it needs an intent-filter.
+                 If not, consider setting android:exported="false". -->
+        </activity>
+
     </application>
 
 </manifest>

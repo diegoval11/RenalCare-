@@ -51,7 +51,7 @@ tools:context=".auth.LoginActivity">
         android:maxLength="10"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="text"
+        android:inputType="number"
         android:textColor="@color/renal_dark_gray" />
 </com.google.android.material.textfield.TextInputLayout>
 
@@ -61,7 +61,7 @@ tools:context=".auth.LoginActivity">
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_marginTop="16dp"
-    android:hint="@string/hint_pin"
+    android:hint="@string/hint_password_new"
     android:textColorHint="@color/renal_dark_gray"
     app:boxStrokeColor="@color/renal_dark_green"
     app:hintTextColor="@color/renal_dark_green"
@@ -75,7 +75,7 @@ tools:context=".auth.LoginActivity">
         android:id="@+id/etPin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="numberPassword"
+        android:inputType="textPassword"
         android:textColor="@color/renal_dark_gray" />
 </com.google.android.material.textfield.TextInputLayout>
 

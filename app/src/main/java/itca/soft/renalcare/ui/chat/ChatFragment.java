@@ -1,4 +1,4 @@
-// ChatFragment.java - VERSIÓN COMPLETA Y ACTUALIZADA
+// ChatFragment.java - VERSIÓN COMPLETA Y CORREGIDA
 package itca.soft.renalcare.ui.chat;
 
 import android.Manifest;
@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -28,14 +28,17 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
-import itca.soft.renalcare.R;
-import itca.soft.renalcare.data.models.ConversacionItem;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import itca.soft.renalcare.R;
+import itca.soft.renalcare.data.models.ConversacionItem;
 
 public class ChatFragment extends Fragment {
 
@@ -56,12 +59,12 @@ public class ChatFragment extends Fragment {
     // ViewModel
     private ChatViewModel viewModel;
 
-    // Imagen seleccionada
-    private Uri selectedImageUri;
-    private String currentPhotoPath;
+    // URIs para cámara y galería
+    private Uri selectedImageUri; // Esta será la content:// URI (de cámara o galería)
+    private Uri cameraImageUri;   // Variable temporal para guardar la content:// URI de la cámara
 
     // ID Usuario (cambiar por tu sistema de auth)
-    private int idUsuario = 2;
+    private int idUsuario = 2; // Asegúrate de que este sea el ID de usuario correcto
 
     // Launchers para permisos e imágenes
     private ActivityResultLauncher<String> requestPermissionLauncher;
@@ -108,13 +111,19 @@ public class ChatFragment extends Fragment {
                 }
         );
 
+        // --- CORREGIDO ---
         // Launcher para tomar foto
+        // El callback 'success' indica si la escritura en la URI de entrada (cameraImageUri) fue exitosa
         takePictureLauncher = registerForActivityResult(
                 new ActivityResultContracts.TakePicture(),
                 success -> {
-                    if (success && currentPhotoPath != null) {
-                        selectedImageUri = Uri.fromFile(new File(currentPhotoPath));
+                    if (success) {
+                        // La foto se guardó en 'cameraImageUri'. Esa es nuestra URI seleccionada.
+                        selectedImageUri = cameraImageUri;
                         mostrarPreviewImagen(selectedImageUri);
+                    } else {
+                        // Si falla o se cancela, reseteamos la URI
+                        cameraImageUri = null;
                     }
                 }
         );
@@ -124,6 +133,7 @@ public class ChatFragment extends Fragment {
                 new ActivityResultContracts.GetContent(),
                 uri -> {
                     if (uri != null) {
+                        // La 'uri' de la galería ya es una content:// URI
                         selectedImageUri = uri;
                         mostrarPreviewImagen(uri);
                     }
@@ -192,27 +202,24 @@ public class ChatFragment extends Fragment {
         btnRemoveImage.setOnClickListener(v -> quitarImagen());
     }
 
+    // --- CORREGIDO ---
     private void enviarMensaje() {
         String mensaje = etMessage.getText().toString().trim();
 
+        // Ya no se usa getRealPathFromURI ni se crea una file:// URI
         if (selectedImageUri != null) {
-            // Convertir URI a archivo temporal
-            String filePath = getRealPathFromURI(selectedImageUri);
-            if (filePath != null) {
-                Uri fileUri = Uri.fromFile(new File(filePath));
-                viewModel.enviarMensajeConImagen(idUsuario, mensaje, fileUri);
-                quitarImagen();
-            } else {
-                Toast.makeText(requireContext(), "Error al procesar la imagen", Toast.LENGTH_SHORT).show();
-            }
+            // Enviar la 'selectedImageUri' (que es content://) directamente
+            viewModel.enviarMensajeConImagen(idUsuario, mensaje, selectedImageUri);
+            quitarImagen(); // Limpiar la preview
         } else if (!mensaje.isEmpty()) {
             // Enviar solo texto
             viewModel.enviarMensaje(idUsuario, mensaje);
         } else {
+            // No hacer nada si está vacío
             return;
         }
 
-        etMessage.setText("");
+        etMessage.setText(""); // Limpiar el input
     }
 
     private void mostrarOpcionesImagen() {
@@ -235,23 +242,30 @@ public class ChatFragment extends Fragment {
                 == PackageManager.PERMISSION_GRANTED) {
             abrirCamara();
         } else {
+            // Pedir permiso
             requestPermissionLauncher.launch(Manifest.permission.CAMERA);
         }
     }
 
+    // --- CORREGIDO ---
     private void abrirCamara() {
         try {
             File photoFile = crearArchivoImagen();
             if (photoFile != null) {
-                Uri photoUri = FileProvider.getUriForFile(
+                // Generar la content:// URI usando el FileProvider
+                // Esta 'cameraImageUri' se guarda como variable de instancia
+                cameraImageUri = FileProvider.getUriForFile(
                         requireContext(),
-                        requireContext().getPackageName() + ".fileprovider",
+                        // AVISO: Asegúrate que esta autoridad coincide con tu AndroidManifest.xml
+                        // (basado en tu manifest, debe ser ".provider")
+                        requireContext().getPackageName() + ".provider",
                         photoFile
                 );
-                takePictureLauncher.launch(photoUri);
+                // Lanzar la cámara, pidiéndole que guarde la foto en nuestra URI
+                takePictureLauncher.launch(cameraImageUri);
             }
-        } catch (IOException e) {
-            Toast.makeText(requireContext(), "Error al crear archivo", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(requireContext(), "Error al preparar la cámara", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -259,45 +273,18 @@ public class ChatFragment extends Fragment {
         pickImageLauncher.launch("image/*");
     }
 
-    // Método helper para obtener la ruta real del archivo
-    private String getRealPathFromURI(Uri uri) {
-        String result = null;
-        try {
-            // Para URIs de contenido
-            if ("content".equalsIgnoreCase(uri.getScheme())) {
-                // Copiar el archivo a un directorio temporal
-                File tempFile = new File(requireContext().getCacheDir(), "temp_image_" + System.currentTimeMillis() + ".jpg");
+    // --- ELIMINADO ---
+    // El método getRealPathFromURI() se eliminó por completo.
+    // Ya no es necesario y era la fuente del error.
 
-                try (java.io.InputStream inputStream = requireContext().getContentResolver().openInputStream(uri);
-                     java.io.FileOutputStream outputStream = new java.io.FileOutputStream(tempFile)) {
-
-                    if (inputStream != null) {
-                        byte[] buffer = new byte[4096];
-                        int bytesRead;
-                        while ((bytesRead = inputStream.read(buffer)) != -1) {
-                            outputStream.write(buffer, 0, bytesRead);
-                        }
-                        result = tempFile.getAbsolutePath();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else if ("file".equalsIgnoreCase(uri.getScheme())) {
-                result = uri.getPath();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
-
+    // --- MODIFICADO ---
+    // Este método ya no necesita guardar 'currentPhotoPath'
     private File crearArchivoImagen() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
-        currentPhotoPath = image.getAbsolutePath();
-        return image;
+        // Crear el archivo temporal
+        return File.createTempFile(imageFileName, ".jpg", storageDir);
     }
 
     private void mostrarPreviewImagen(Uri uri) {
@@ -310,7 +297,7 @@ public class ChatFragment extends Fragment {
 
     private void quitarImagen() {
         selectedImageUri = null;
-        currentPhotoPath = null;
+        cameraImageUri = null;
         imagePreviewContainer.setVisibility(View.GONE);
     }
 

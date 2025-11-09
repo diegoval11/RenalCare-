@@ -1,27 +1,31 @@
-// ChatViewModel.java - COMPLETO
 package itca.soft.renalcare.ui.chat;
 
+import android.app.Application;
 import android.net.Uri;
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
+import java.util.ArrayList;
+import java.util.List;
 import itca.soft.renalcare.data.models.ChatMessage;
 import itca.soft.renalcare.data.models.ConversacionItem;
 import itca.soft.renalcare.data.models.ConversacionesResponse;
 import itca.soft.renalcare.data.models.MensajeResponse;
 import itca.soft.renalcare.data.repository.ChatRepository;
-import java.util.ArrayList;
-import java.util.List;
 
-public class ChatViewModel extends ViewModel {
+public class ChatViewModel extends AndroidViewModel {
     private final ChatRepository repository;
     private final MutableLiveData<List<ChatMessage>> messages = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
     private final MutableLiveData<List<ConversacionItem>> conversaciones = new MutableLiveData<>();
     private Integer idConversacionActual = null;
 
-    public ChatViewModel() {
-        repository = new ChatRepository();
+    // --- CONSTRUCTOR CORREGIDO ---
+    public ChatViewModel(@NonNull Application application) {
+        super(application);
+        // Se corrigió el ';' faltante y el ')' extra
+        repository = new ChatRepository(application);
         messages.setValue(new ArrayList<>());
         isLoading.setValue(false);
         conversaciones.setValue(new ArrayList<>());
@@ -53,17 +57,25 @@ public class ChatViewModel extends ViewModel {
                 .observeForever(result -> {
                     if (result.getStatus() == ChatRepository.Result.Status.SUCCESS) {
                         MensajeResponse response = result.getData();
-                        idConversacionActual = response.getIdConversacion();
+                        if (response != null) {
+                            idConversacionActual = response.getIdConversacion();
 
-                        agregarMensaje(new ChatMessage(
-                                response.getMensajeIa(),
-                                ChatMessage.VIEW_TYPE_RECEIVED
-                        ));
+                            agregarMensaje(new ChatMessage(
+                                    response.getMensajeIa(),
+                                    ChatMessage.VIEW_TYPE_RECEIVED
+                            ));
 
+                            // Recargar lista de conversaciones
+                            cargarConversaciones(idUsuario);
+                        } else {
+                            // Manejar caso de respuesta exitosa pero nula
+                            agregarMensaje(new ChatMessage(
+                                    "Error: Respuesta nula del servidor",
+                                    ChatMessage.VIEW_TYPE_RECEIVED
+                            ));
+                        }
                         isLoading.setValue(false);
 
-                        // Recargar lista de conversaciones
-                        cargarConversaciones(idUsuario);
                     } else if (result.getStatus() == ChatRepository.Result.Status.ERROR) {
                         agregarMensaje(new ChatMessage(
                                 "Error: " + result.getMessage(),
@@ -86,18 +98,25 @@ public class ChatViewModel extends ViewModel {
                 .observeForever(result -> {
                     if (result.getStatus() == ChatRepository.Result.Status.SUCCESS) {
                         MensajeResponse response = result.getData();
-                        idConversacionActual = response.getIdConversacion();
+                        if (response != null) {
+                            idConversacionActual = response.getIdConversacion();
 
-                        // Respuesta de la IA solo texto (sin imagen)
-                        agregarMensaje(new ChatMessage(
-                                response.getMensajeIa(),
-                                ChatMessage.VIEW_TYPE_RECEIVED
-                        ));
+                            // Respuesta de la IA solo texto (sin imagen)
+                            agregarMensaje(new ChatMessage(
+                                    response.getMensajeIa(),
+                                    ChatMessage.VIEW_TYPE_RECEIVED
+                            ));
 
+                            // Recargar lista de conversaciones
+                            cargarConversaciones(idUsuario);
+                        } else {
+                            agregarMensaje(new ChatMessage(
+                                    "Error: Respuesta nula del servidor",
+                                    ChatMessage.VIEW_TYPE_RECEIVED
+                            ));
+                        }
                         isLoading.setValue(false);
 
-                        // Recargar lista de conversaciones
-                        cargarConversaciones(idUsuario);
                     } else if (result.getStatus() == ChatRepository.Result.Status.ERROR) {
                         agregarMensaje(new ChatMessage(
                                 "Error: " + result.getMessage(),
@@ -144,17 +163,20 @@ public class ChatViewModel extends ViewModel {
                 .observeForever(result -> {
                     if (result.getStatus() == ChatRepository.Result.Status.SUCCESS) {
                         ConversacionesResponse.ConversacionData conversacion = result.getData();
-
                         List<ChatMessage> mensajesCargados = new ArrayList<>();
-                        if (conversacion.getMensajes() != null) {
+
+                        if (conversacion != null && conversacion.getMensajes() != null) {
                             for (ConversacionesResponse.MensajeData msg : conversacion.getMensajes()) {
                                 int viewType = msg.getRemitente().equals("usuario")
                                         ? ChatMessage.VIEW_TYPE_SENT
                                         : ChatMessage.VIEW_TYPE_RECEIVED;
 
+                                // TO-DO: El modelo de ChatMessage debe soportar URL de imagen aquí
+                                // Por ahora, solo cargamos texto
                                 mensajesCargados.add(new ChatMessage(
                                         msg.getContenido(),
                                         viewType
+                                        // Debería ir msg.getImageUrl() si existe
                                 ));
                             }
                         }
@@ -170,8 +192,9 @@ public class ChatViewModel extends ViewModel {
 
     // Sobrecarga para compatibilidad con el fragment
     public void cargarMensajesDeConversacion(int idConversacion) {
-        // Usa un ID de usuario por defecto o guárdalo en el ViewModel
-        cargarMensajesDeConversacion(1, idConversacion);
+        // TO-DO: Deberías obtener el idUsuario de SharedPreferences o similar
+        int idUsuarioHardcoded = 1;
+        cargarMensajesDeConversacion(idUsuarioHardcoded, idConversacion);
     }
 
     public void nuevaConversacion() {
@@ -183,9 +206,10 @@ public class ChatViewModel extends ViewModel {
 
     private void agregarMensaje(ChatMessage mensaje) {
         List<ChatMessage> currentMessages = messages.getValue();
-        if (currentMessages != null) {
-            currentMessages.add(mensaje);
-            messages.setValue(currentMessages);
+        if (currentMessages == null) {
+            currentMessages = new ArrayList<>();
         }
+        currentMessages.add(mensaje);
+        messages.setValue(currentMessages);
     }
 }
