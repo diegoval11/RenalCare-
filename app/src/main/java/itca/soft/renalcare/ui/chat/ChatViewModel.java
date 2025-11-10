@@ -1,4 +1,3 @@
-// ChatViewModel.java - COMPLETO
 package itca.soft.renalcare.ui.chat;
 
 import android.net.Uri;
@@ -152,10 +151,19 @@ public class ChatViewModel extends ViewModel {
                                         ? ChatMessage.VIEW_TYPE_SENT
                                         : ChatMessage.VIEW_TYPE_RECEIVED;
 
-                                mensajesCargados.add(new ChatMessage(
-                                        msg.getContenido(),
-                                        viewType
-                                ));
+                                // Si el mensaje tiene imagen, incluirla
+                                if (msg.getUrlImagen() != null && !msg.getUrlImagen().isEmpty()) {
+                                    mensajesCargados.add(new ChatMessage(
+                                            msg.getContenido(),
+                                            viewType,
+                                            msg.getUrlImagen()
+                                    ));
+                                } else {
+                                    mensajesCargados.add(new ChatMessage(
+                                            msg.getContenido(),
+                                            viewType
+                                    ));
+                                }
                             }
                         }
 

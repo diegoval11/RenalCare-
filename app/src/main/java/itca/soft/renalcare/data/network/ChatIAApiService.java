@@ -3,6 +3,7 @@ package itca.soft.renalcare.data.network;
 
 import itca.soft.renalcare.data.models.ConversacionesResponse;
 import itca.soft.renalcare.data.models.MensajeResponse;
+import itca.soft.renalcare.data.models.VoiceSessionResponse;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -33,5 +34,11 @@ public interface ChatIAApiService {
     @GET("chatIA/conversaciones/{id_usuario}")
     Call<ConversacionesResponse> obtenerConversaciones(
             @Path("id_usuario") int idUsuario
+    );
+
+    // ========== CREAR SESIÓN DE VOZ ==========
+    @GET("chatIA/voice-session/{id_paciente}")
+    Call<VoiceSessionResponse> crearSesionVoz(
+            @Path("id_paciente") int idPaciente
     );
 }

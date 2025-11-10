@@ -13,6 +13,11 @@
     <!-- Feature de cámara (opcional, no requerido) -->
     <uses-feature android:name="android.hardware.camera" android:required="false" />
 
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <uses-feature android:name="android.hardware.microphone" android:required="false" />
+
+
 
     <application
         android:usesCleartextTraffic="true"

@@ -10,6 +10,7 @@
     import com.google.android.material.bottomnavigation.BottomNavigationView;
 
     import itca.soft.renalcare.ui.chat.ChatFragment;
+    import itca.soft.renalcare.ui.voice.VoiceChatFragment;
 
     public class MainActivity extends AppCompatActivity {
 
@@ -19,10 +20,10 @@
             setContentView(R.layout.activity_main);
 
             if (savedInstanceState == null) {
-                ChatFragment chatFragment = new ChatFragment();
+                VoiceChatFragment voiceChatFragment = new VoiceChatFragment();
                 FragmentTransaction transaction = getSupportFragmentManager()
                         .beginTransaction();
-                transaction.replace(android.R.id.content, chatFragment);
+                transaction.replace(android.R.id.content, voiceChatFragment);
                 transaction.commit();
             }
             /*

@@ -8,11 +8,19 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import java.util.concurrent.TimeUnit;
 
 public class RetrofitClient {
-    private static final String BASE_URL = "http://192.168.10.102:3000/"; // ⚠️ Cambiar por tu IP
-    private static Retrofit retrofit;
+    private static Retrofit retrofit = null;
+
+    // IMPORTANTE: Cambia esta URL por la de tu servidor
+    // Ejemplo: "http://192.168.1.100:3000/" si estás en la misma red
+    // o "https://tu-dominio.com/" si está en producción
+
+    private static final String BASE_URL = "http://192.168.138.109:3000/";
+    // URL base para las imágenes (mismo servidor)
+    public static final String IMAGE_BASE_URL = BASE_URL+"public";
 
     public static Retrofit getClient() {
         if (retrofit == null) {
+            // Logger para ver las peticiones en Logcat
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
             logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
@@ -30,5 +38,24 @@ public class RetrofitClient {
                     .build();
         }
         return retrofit;
+    }
+
+    // Método helper para obtener URL completa de imagen
+    public static String getFullImageUrl(String imagePath) {
+        if (imagePath == null || imagePath.isEmpty()) {
+            return null;
+        }
+
+        // Si ya es una URL completa, retornarla
+        if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+            return imagePath;
+        }
+
+        // Si empieza con /, quitarlo porque BASE_URL ya termina con /
+        if (imagePath.startsWith("/")) {
+            imagePath = imagePath.substring(1);
+        }
+
+        return IMAGE_BASE_URL + imagePath;
     }
 }

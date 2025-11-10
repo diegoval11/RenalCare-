@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+
+    <!-- Outer wave -->
+    <path
+        android:pathData="M 100,50 Q 130,50 130,80 Q 130,110 100,110 Q 70,110 70,80 Q 70,50 100,50"
+        android:strokeColor="#5B7C99"
+        android:strokeWidth="2" />
+
+    <!-- Middle wave -->
+    <path
+        android:pathData="M 100,40 Q 145,40 145,80 Q 145,120 100,120 Q 55,120 55,80 Q 55,40 100,40"
+        android:strokeColor="#8BA1B8"
+        android:strokeWidth="2"
+        android:alpha="0.6" />
+
+    <!-- Inner solid circle -->
+    <path
+        android:fillColor="#5B7C99"
+        android:pathData="M100,65
+                          a15,15 0 1,0 0,30
+                          a15,15 0 1,0 0,-30" />
+</vector>

@@ -1,0 +1,202 @@
+// VoiceChatFragment.java
+package itca.soft.renalcare.ui.voice;
+
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import itca.soft.renalcare.R;
+import itca.soft.renalcare.utils.WebRTCManager;
+
+public class VoiceChatFragment extends Fragment {
+
+    private VoiceChatViewModel viewModel;
+    private WebRTCManager webRTCManager;
+
+    // UI Components
+    private ImageButton btnMicrophone;
+    private TextView tvStatus;
+    private ProgressBar progressBar;
+
+    // ID Usuario
+    private int idUsuario = 2;
+
+    // Estado de conexión
+    private boolean isConnected = false;
+
+    // Launcher para permisos
+    private ActivityResultLauncher<String> requestPermissionLauncher;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setupPermissionLauncher();
+        webRTCManager = new WebRTCManager(requireContext());
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_voice_chat, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        initViews(view);
+        setupViewModel();
+        setupClickListeners();
+    }
+
+    private void setupPermissionLauncher() {
+        requestPermissionLauncher = registerForActivityResult(
+                new ActivityResultContracts.RequestPermission(),
+                isGranted -> {
+                    if (isGranted) {
+                        iniciarSesionVoz();
+                    } else {
+                        Toast.makeText(requireContext(),
+                                "Permiso de micrófono necesario", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+    }
+
+    private void initViews(View view) {
+        btnMicrophone = view.findViewById(R.id.btn_microphone);
+        tvStatus = view.findViewById(R.id.tv_status);
+        progressBar = view.findViewById(R.id.progress_bar);
+    }
+
+    private void setupViewModel() {
+        viewModel = new ViewModelProvider(this).get(VoiceChatViewModel.class);
+
+        // Observar loading
+        viewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
+            progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+            if (!isConnected) {
+                btnMicrophone.setEnabled(!isLoading);
+            }
+        });
+
+        // Observar token de sesión
+        viewModel.getSessionToken().observe(getViewLifecycleOwner(), token -> {
+            if (token != null && !isConnected) {
+                tvStatus.setText("Conectando a WebRTC...");
+                connectToWebRTC(token);
+            }
+        });
+
+        // Observar errores
+        viewModel.getErrorMessage().observe(getViewLifecycleOwner(), error -> {
+            if (error != null) {
+                Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
+                tvStatus.setText("Error al conectar");
+                resetUI();
+                viewModel.limpiarError();
+            }
+        });
+    }
+
+    private void setupClickListeners() {
+        btnMicrophone.setOnClickListener(v -> {
+            if (!isConnected) {
+                verificarPermisoMicrofono();
+            } else {
+                detenerSesion();
+            }
+        });
+    }
+
+    private void verificarPermisoMicrofono() {
+        if (ContextCompat.checkSelfPermission(requireContext(),
+                Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+            iniciarSesionVoz();
+        } else {
+            requestPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO);
+        }
+    }
+
+    private void iniciarSesionVoz() {
+        tvStatus.setText("Solicitando sesión...");
+        viewModel.iniciarSesionVoz(idUsuario);
+    }
+
+    private void connectToWebRTC(String token) {
+        webRTCManager.startVoiceSession(token, new WebRTCManager.VoiceConnectionCallback() {
+            @Override
+            public void onConnected() {
+                requireActivity().runOnUiThread(() -> {
+                    isConnected = true;
+                    tvStatus.setText("🎤 Conectado - Puedes hablar");
+                    btnMicrophone.setImageResource(R.drawable.ic_mic_recording);
+                    Toast.makeText(requireContext(),
+                            "¡Conexión establecida!", Toast.LENGTH_SHORT).show();
+                });
+            }
+
+            @Override
+            public void onDisconnected() {
+                requireActivity().runOnUiThread(() -> {
+                    isConnected = false;
+                    tvStatus.setText("Desconectado");
+                    resetUI();
+                });
+            }
+
+            @Override
+            public void onError(String error) {
+                requireActivity().runOnUiThread(() -> {
+                    Toast.makeText(requireContext(),
+                            "Error: " + error, Toast.LENGTH_LONG).show();
+                    tvStatus.setText("Error de conexión");
+                    resetUI();
+                });
+            }
+        });
+    }
+
+    private void detenerSesion() {
+        webRTCManager.stopVoiceSession();
+        isConnected = false;
+        tvStatus.setText("Sesión finalizada");
+        resetUI();
+    }
+
+    private void resetUI() {
+        isConnected = false;
+        btnMicrophone.setImageResource(R.drawable.ic_mic);
+        btnMicrophone.setEnabled(true);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (isConnected) {
+            webRTCManager.stopVoiceSession();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (webRTCManager != null) {
+            webRTCManager.dispose();
+        }
+    }
+}
