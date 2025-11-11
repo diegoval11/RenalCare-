@@ -7,14 +7,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/renal_light_cream"
-    android:padding="24dp">
+    android:padding="24dp"
+    tools:context=".ui.voice.VoiceChatFragment">
 
     <!-- Título -->
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Chat de Voz con Karito"
+        android:text="Chat de voz"
         android:textColor="@color/renal_blue_gray"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -23,49 +24,36 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Indicador visual de voz -->
+    <!-- Ondas animadas -->
     <ImageView
         android:id="@+id/iv_voice_indicator"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="220dp"
+        android:layout_height="220dp"
         android:src="@drawable/ic_voice_wave"
+        android:alpha="0.8"
+        android:scaleType="centerInside"
+        app:tint="@color/renal_dark_gray"
         app:layout_constraintTop_toBottomOf="@id/tv_title"
         app:layout_constraintBottom_toTopOf="@id/tv_status"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:tint="@color/renal_dark_gray" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Estado de la conexión -->
     <TextView
         android:id="@+id/tv_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Presiona el micrófono para comenzar"
+        android:text="Conectando..."
         android:textColor="@color/renal_dark_gray"
         android:textSize="16sp"
         android:gravity="center"
-        android:layout_marginBottom="32dp"
-        app:layout_constraintBottom_toTopOf="@id/btn_microphone"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@id/iv_voice_indicator"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
-    <!-- Botón de micrófono -->
-    <ImageButton
-        android:id="@+id/btn_microphone"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:background="@drawable/bg_microphone_button"
-        android:src="@drawable/ic_mic"
-        android:contentDescription="Grabar voz"
-        android:scaleType="centerInside"
-        android:padding="20dp"
-        app:tint="@color/white"
-        android:layout_marginBottom="48dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <!-- ProgressBar -->
+    <!-- Círculo de carga -->
     <ProgressBar
         android:id="@+id/progress_bar"
         android:layout_width="wrap_content"

@@ -2,12 +2,18 @@
 package itca.soft.renalcare.ui.voice;
 
 import android.Manifest;
+import android.animation.AnimatorSet;
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +31,8 @@ public class VoiceChatFragment extends Fragment {
 
     private VoiceChatViewModel viewModel;
     private WebRTCManager webRTCManager;
+    private ImageView ivVoiceIndicator;
+    private AnimatorSet voiceAnimation;
 
     // UI Components
     private ImageButton btnMicrophone;
@@ -60,7 +68,9 @@ public class VoiceChatFragment extends Fragment {
 
         initViews(view);
         setupViewModel();
-        setupClickListeners();
+
+        // 🔹 Iniciar sesión automáticamente al entrar
+        verificarPermisoMicrofono();
     }
 
     private void setupPermissionLauncher() {
@@ -78,9 +88,10 @@ public class VoiceChatFragment extends Fragment {
     }
 
     private void initViews(View view) {
-        btnMicrophone = view.findViewById(R.id.btn_microphone);
+       // btnMicrophone = view.findViewById(R.id.btn_microphone);
         tvStatus = view.findViewById(R.id.tv_status);
         progressBar = view.findViewById(R.id.progress_bar);
+        ivVoiceIndicator = view.findViewById(R.id.iv_voice_indicator);
     }
 
     private void setupViewModel() {
@@ -89,9 +100,6 @@ public class VoiceChatFragment extends Fragment {
         // Observar loading
         viewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
             progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
-            if (!isConnected) {
-                btnMicrophone.setEnabled(!isLoading);
-            }
         });
 
         // Observar token de sesión
@@ -109,16 +117,6 @@ public class VoiceChatFragment extends Fragment {
                 tvStatus.setText("Error al conectar");
                 resetUI();
                 viewModel.limpiarError();
-            }
-        });
-    }
-
-    private void setupClickListeners() {
-        btnMicrophone.setOnClickListener(v -> {
-            if (!isConnected) {
-                verificarPermisoMicrofono();
-            } else {
-                detenerSesion();
             }
         });
     }
@@ -144,7 +142,8 @@ public class VoiceChatFragment extends Fragment {
                 requireActivity().runOnUiThread(() -> {
                     isConnected = true;
                     tvStatus.setText("🎤 Conectado - Puedes hablar");
-                    btnMicrophone.setImageResource(R.drawable.ic_mic_recording);
+                    //btnMicrophone.setImageResource(R.drawable.ic_mic_recording);
+                    iniciarAnimacionVoz();
                     Toast.makeText(requireContext(),
                             "¡Conexión establecida!", Toast.LENGTH_SHORT).show();
                 });
@@ -153,6 +152,7 @@ public class VoiceChatFragment extends Fragment {
             @Override
             public void onDisconnected() {
                 requireActivity().runOnUiThread(() -> {
+                    detenerAnimacionVoz();
                     isConnected = false;
                     tvStatus.setText("Desconectado");
                     resetUI();
@@ -162,6 +162,7 @@ public class VoiceChatFragment extends Fragment {
             @Override
             public void onError(String error) {
                 requireActivity().runOnUiThread(() -> {
+                    detenerAnimacionVoz();
                     Toast.makeText(requireContext(),
                             "Error: " + error, Toast.LENGTH_LONG).show();
                     tvStatus.setText("Error de conexión");
@@ -180,15 +181,16 @@ public class VoiceChatFragment extends Fragment {
 
     private void resetUI() {
         isConnected = false;
-        btnMicrophone.setImageResource(R.drawable.ic_mic);
-        btnMicrophone.setEnabled(true);
+        //btnMicrophone.setImageResource(R.drawable.ic_mic);
+        //btnMicrophone.setEnabled(true);
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    public void onStop() {
+        super.onStop();
+        // 🔹 Detener sesión automáticamente al salir del fragmento
         if (isConnected) {
-            webRTCManager.stopVoiceSession();
+            detenerSesion();
         }
     }
 
@@ -198,5 +200,37 @@ public class VoiceChatFragment extends Fragment {
         if (webRTCManager != null) {
             webRTCManager.dispose();
         }
+        detenerAnimacionVoz();
     }
+
+
+    private void iniciarAnimacionVoz() {
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(ivVoiceIndicator, "scaleX", 1f, 1.3f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(ivVoiceIndicator, "scaleY", 1f, 1.3f);
+        ObjectAnimator colorAnim = ObjectAnimator.ofInt(ivVoiceIndicator, "colorFilter",
+                Color.parseColor("#888888"), Color.parseColor("#00BCD4"));
+        colorAnim.setEvaluator(new ArgbEvaluator());
+
+        scaleX.setRepeatMode(ObjectAnimator.REVERSE);
+        scaleY.setRepeatMode(ObjectAnimator.REVERSE);
+        colorAnim.setRepeatMode(ObjectAnimator.REVERSE);
+
+        scaleX.setRepeatCount(ObjectAnimator.INFINITE);
+        scaleY.setRepeatCount(ObjectAnimator.INFINITE);
+        colorAnim.setRepeatCount(ObjectAnimator.INFINITE);
+
+        voiceAnimation = new AnimatorSet();
+        voiceAnimation.setInterpolator(new LinearInterpolator());
+        voiceAnimation.setDuration(600);
+        voiceAnimation.playTogether(scaleX, scaleY, colorAnim);
+        voiceAnimation.start();
+    }
+
+    private void detenerAnimacionVoz() {
+        if (voiceAnimation != null && voiceAnimation.isRunning()) {
+            voiceAnimation.cancel();
+            ivVoiceIndicator.clearAnimation();
+        }
+    }
+
 }
