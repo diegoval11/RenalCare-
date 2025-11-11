@@ -31,4 +31,8 @@ public class RetrofitClient {
         }
         return retrofit;
     }
+    public static RecordatorioApiService getApiService() {
+        return getClient().create(RecordatorioApiService.class);
+    }
+
 }

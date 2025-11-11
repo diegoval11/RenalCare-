@@ -5,6 +5,11 @@
     <!-- Network and device hardware permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <!--
@@ -48,6 +53,7 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
+        android:name=".RenalCareApp"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -67,6 +73,19 @@
         </provider>
 
         <activity
+            android:name=".ui.perfil.MedicationManagementActivity"
+            android:exported="false"
+            android:label="Gestionar Medicamentos"
+            android:theme="@style/Theme.RenalCare" />
+
+        <receiver
+            android:name=".notifications.MedicationAlarmReceiver"
+            android:enabled="true"
+            android:exported="false" />
+
+
+
+        <activity
             android:name=".auth.LoginActivity"
             android:exported="true"
             android:theme="@style/Theme.RenalCare">
@@ -75,6 +94,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
 
         <activity
             android:name=".auth.RoleSelectionActivity"

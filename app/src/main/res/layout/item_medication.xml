@@ -10,18 +10,19 @@
     app:cardCornerRadius="12dp"
     app:cardElevation="0dp">
 
+
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:layout_height="wrap_content" android:padding="16dp">
 
         <CheckBox
             android:id="@+id/cb_med_taken"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/img_med_icon_bg"
@@ -29,30 +30,32 @@
             android:layout_height="40dp"
             android:layout_marginStart="8dp"
             android:src="@drawable/rounded_background_dark_gray"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/cb_med_taken"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/img_med_icon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:src="@drawable/ic_pill"
-            app:tint="@color/white"
             app:layout_constraintBottom_toBottomOf="@id/img_med_icon_bg"
             app:layout_constraintEnd_toEndOf="@id/img_med_icon_bg"
             app:layout_constraintStart_toStartOf="@id/img_med_icon_bg"
-            app:layout_constraintTop_toTopOf="@id/img_med_icon_bg" />
+            app:layout_constraintTop_toTopOf="@id/img_med_icon_bg"
+            app:tint="@color/white" />
 
         <TextView
             android:id="@+id/tv_med_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp" android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:textColor="@color/black"
             android:textStyle="bold"
+            android:maxLines="1"
+            android:ellipsize="end"
             app:layout_constraintStart_toEndOf="@id/img_med_icon_bg"
             app:layout_constraintTop_toTopOf="@id/img_med_icon_bg"
+            app:layout_constraintEnd_toStartOf="@id/img_med_time_icon"
             tools:text="Sevelamer" />
 
         <TextView
@@ -71,20 +74,36 @@
             android:layout_height="16dp"
             android:layout_marginEnd="4dp"
             android:src="@android:drawable/ic_menu_recent_history"
-            app:tint="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/tv_med_time"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:tint="@color/black" />
 
         <TextView
             android:id="@+id/tv_med_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             tools:text="08:00 AM" />
+
+
+        <ImageView
+            android:id="@+id/icon_reminder_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="80dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Opciones"
+            android:padding="8dp"
+            android:src="@android:drawable/ic_menu_more"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0"
+            app:tint="?android:attr/textColorSecondary" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

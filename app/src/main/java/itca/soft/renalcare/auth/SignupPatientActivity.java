@@ -229,7 +229,7 @@ public class SignupPatientActivity extends AppCompatActivity {
 
         // --- 2. Configurar Parámetros para loopj ---
         RequestParams params = new RequestParams();
-        // Enviamos todo el JSON como un solo parámetro de texto
+        // Enviamos completo el JSON como un solo parámetro de texto
         params.put("signup_data", data.toString());
 
         // (Mostrar un diálogo de "Cargando...")
