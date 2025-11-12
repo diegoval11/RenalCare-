@@ -68,7 +68,7 @@ public class MedicationManagementActivity extends AppCompatActivity implements R
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_medication_management);
 
-        apiService = RetrofitClient.getApiService();
+        apiService = RetrofitClient.getClient().create(RecordatorioApiService.class);
 
         fabAddMedication = findViewById(R.id.btn_add_medication);
         recyclerView = findViewById(R.id.recycler_manage_meds);

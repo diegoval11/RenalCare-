@@ -14,7 +14,7 @@ public class RetrofitClient {
     // Ejemplo: "http://192.168.1.100:3000/" si estás en la misma red
     // o "https://tu-dominio.com/" si está en producción
 
-    private static final String BASE_URL = "http://192.168.1.163:3000/";
+    private static final String BASE_URL = "http://192.168.1.12:3000/";
     // URL base para las imágenes (mismo servidor)
     public static final String IMAGE_BASE_URL = BASE_URL+"public";
 

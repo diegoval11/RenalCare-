@@ -65,7 +65,8 @@ public class PerfilFragment extends Fragment implements OnMedicationTakeListener
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        apiService = RetrofitClient.getApiService();
+
+        apiService = RetrofitClient.getClient().create(RecordatorioApiService.class);
 
         iconMedNotification = view.findViewById(R.id.icon_med_notification);
         if (iconMedNotification != null) {
