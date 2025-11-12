@@ -1,3 +1,109 @@
 <resources>
     <string name="app_name">RenalCare</string>
+
+    <!-- Común (Login/Signup) -->
+    <string name="hint_dui">DUI (será tu usuario)</string>
+    <string name="hint_pin">PIN (Contraseña)</string>
+    <string name="hint_pin_numeric">Crea un PIN numérico</string>
+    <string name="hint_pin_confirm">Confirma tu PIN</string>
+    <string name="action_login">Iniciar Sesión</string>
+    <string name="prompt_no_account">¿No tienes cuenta? <b>Regístrate aquí</b></string>
+    <string name="action_register">Registrarse</string>
+    <string name="hint_full_name">Tu nombre completo</string>
+
+    <!-- Role Selection -->
+    <string name="title_role_selection">¿Cómo te registrarás?</string>
+    <string name="role_patient">Soy Paciente</string>
+    <string name="role_caregiver">Soy Encargado / Cuidador</string>
+
+    <!-- Signup Caregiver (Encargado) -->
+    <string name="title_signup_caregiver">¡Gracias por cuidarlos!</string>
+    <string name="hint_relationship">Tu parentesco (ej: Hijo, Esposa)</string>
+    <string name="action_upload_photo">Subir Foto de Perfil</string>
+    <string name="hint_phone">Tu teléfono de contacto</string>
+
+    <!-- Signup Patient (Paciente) -->
+    <string name="title_signup_patient">¡Bienvenido, Paciente!</string>
+
+    <string name="patient_section_personal">1. Tus Datos Personales</string>
+
+    <string name="patient_section_medical">2. Tu Condición Médica</string>
+    <string name="patient_medical_q1">¿Conoces qué tipo de insuficiencia renal tienes?</string>
+    <string name="patient_medical_opt1">Crónica</string>
+    <string name="patient_medical_opt2">Aguda</string>
+    <string name="patient_medical_opt3">No lo sé / Mi médico lo determinará</string>
+
+    <string name="patient_section_meds">3. Tus Medicamentos</string>
+    <string name="patient_meds_hint">Medicamentos (ej: Furosemida, Losartán)</string>
+    <string name="patient_meds_helper">Separa con comas</string>
+
+    <string name="patient_section_diet">4. Dieta y Líquidos</string>
+    <string name="patient_diet_q1">Tus restricciones dietéticas (marca todas las que apliquen)</string>
+    <string name="patient_diet_opt1">Bajo sodio</string>
+    <string name="patient_diet_opt2">Bajo potasio</string>
+    <string name="patient_diet_opt3">Bajo fósforo</string>
+    <string name="patient_diet_opt4">Bajo en proteínas</string>
+
+    <string name="patient_section_dialysis">5. Diálisis</string>
+    <string name="patient_dialysis_q1">¿Recibes algún tipo de diálisis?</string>
+    <string name="patient_dialysis_opt1">Hemodiálisis</string>
+    <string name="patient_dialysis_opt2">Diálisis peritoneal</string>
+    <string name="patient_dialysis_opt3">Ninguna (aún no inicio)</string>
+
+    <string name="patient_section_contact">6. Contacto de Emergencia</string>
+    <string name="patient_contact_hint_name">Nombre de tu contacto</string>
+    <string name="patient_contact_hint_phone">Teléfono de tu contacto</string>
+
+
+
+    <!-- Helper Text -->
+    <string name="helper_dui_format">Válido sin guiones o espacios (ej: 12345678)</string>
+    <string name="helper_pin_requirements">Usa números para mayor seguridad (4-8 dígitos)</string>
+    <string name="helper_pin_confirm">Debe coincidir con el PIN ingresado</string>
+    <string name="helper_relationship">Ej: Madre, Padre, Hermano, Cónyuge, etc.</string>
+    <string name="helper_medications">Separar múltiples medicamentos con comas</string>
+    <string name="helper_phone_format">Formato: +503 XXXX XXXX</string>
+
+
+    <!-- Medicamento Item Hints -->
+    <string name="hint_nombre_medicamento">Nombre del Medicamento</string>
+    <string name="hint_dosis">Dosis</string>
+    <string name="suffix_mg">mg</string>
+    <string name="hint_horario_formato">Horario (ej: 08:00 AM)</string>
+    <string name="helper_horario_formato">Formato: HH:MM AM/PM. Ejemplo: 08:00 AM, 02:30 PM</string>
+    <string name="content_desc_eliminar_medicamento">Eliminar medicamento</string>
+    <string name="hint_password_confirm">Confirme su contraseña</string>
+    <string name="hint_password_new">Ingrese su contraseña</string>
+    <string name="action_back">Atras</string>
+    <string name="action_next">Siguiente</string>
+    <string name="action_register_final">Confirmar y Registrar</string>
+    <string name="tel_contacto_emergencia">Teléfono del Contacto</string>
+    <string name="nombre_del_contacto">Nombre del Contacto</string>
+    <string name="texto_contacto_emergencia">Contacto de Emergencia (Opcional)</string>
+    <string name="otro">Otro</string>
+    <string name="femenino">Femenino</string>
+    <string name="masculino">Masculino</string>
+    <string name="texto_pregunta_genero">¿Cuál es tu género?</string>
+    <string name="step2_datos_personales">Paso 2: Tus Datos Personales</string>
+    <string name="fecha_de_nacimiento">Fecha de Nacimiento</string>
+    <string name="no_tengo_este_dato">No tengo este dato</string>
+    <string name="ejemplo_creatina">Nivel de Creatinina (ej: 4.8)</string>
+    <string name="no_se_mi_peso">No sé mi peso ahora</string>
+    <string name="tu_peso_en_libras">Tu peso más reciente (en libras)</string>
+    <string name="pregunta_tratamiento">¿Recibes algún tratamiento principal?</string>
+    <string name="pregunta_condicion_ren">Aprox. ¿Cuál es tu condición renal?</string>
+    <string name="step3_condicion_medica">Paso 3: Tu Condición Médica</string>
+    <string name="mensaje_feedback_deldoctor">✓ Medicamentos serán añadidos por tu doctor.</string>
+    <string name="mi_doctor_decidir_esto">Mi doctor decidirá esto</string>
+    <string name="agregar_medicamento">+ Agregar Medicamento</string>
+    <string name="info_de_medicamentos">Información de medicamentos</string>
+    <string name="step3_tu_tratamiento">Paso 4: Tu Tratamiento</string>
+    <string name="_1_tu_cuenta">1. Tu Cuenta</string>
+    <string name="_2_datos_personales">2. Datos Personales</string>
+    <string name="_3_condici_n_m_dica">3. Condición Médica</string>
+    <string name="_4_tratamiento">4. Tratamiento</string>
+    <string name="confirmar_y_registrar">Presiona \'Confirmar y Registrar\' si todo es correcto.</string>
+    <string name="step5_revisa_tus_datos">Paso 5: Revisa tus Datos</string>
+
+
 </resources>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp"
+    android:background="@color/renal_light_cream"
+    tools:context=".auth.RoleSelectionActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_role_selection"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textColor="@color/renal_dark_green"
+        android:layout_marginBottom="64dp"/>
+
+    <!-- Replaced simple buttons with MaterialButtons inside centered LinearLayout for better visual hierarchy -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginHorizontal="16dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnGoToPatient"
+            style="@style/Widget.MaterialComponents.Button"
+            android:layout_width="280dp"
+            android:layout_height="72dp"
+            android:text="@string/role_patient"
+            android:textColor="@color/renal_light_cream"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:backgroundTint="@color/renal_dark_green"
+            android:layout_marginBottom="20dp"
+            app:cornerRadius="12dp"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            app:elevation="4dp"
+            app:rippleColor="@color/renal_sand"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnGoToCaregiver"
+            style="@style/Widget.MaterialComponents.Button"
+            android:layout_width="280dp"
+            android:layout_height="72dp"
+            android:text="@string/role_caregiver"
+            android:textColor="@color/renal_light_cream"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:backgroundTint="@color/renal_blue_gray"
+            app:cornerRadius="12dp"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            app:elevation="4dp"
+            app:rippleColor="@color/renal_sand"/>
+
+    </LinearLayout>
+
+</LinearLayout>

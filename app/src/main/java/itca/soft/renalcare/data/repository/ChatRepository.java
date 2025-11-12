@@ -1,9 +1,21 @@
-// ChatRepository.java - COMPLETO
+// ChatRepository.java - COMPLETO Y CORREGIDO
 package itca.soft.renalcare.data.repository;
 
+import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
+import android.provider.OpenableColumns;
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.List;
+
 import itca.soft.renalcare.data.models.ConversacionesResponse;
 import itca.soft.renalcare.data.models.MensajeResponse;
 import itca.soft.renalcare.data.network.ChatIAApiService;
@@ -14,17 +26,18 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import java.io.File;
-import java.util.List;
 
 public class ChatRepository {
     private final ChatIAApiService apiService;
+    private final Context context; // <-- 1. Contexto agregado
 
-    public ChatRepository() {
+    // 2. Constructor modificado para recibir Context
+    public ChatRepository(Context context) {
         apiService = RetrofitClient.getClient().create(ChatIAApiService.class);
+        this.context = context.getApplicationContext(); // Usar ApplicationContext
     }
 
-    // ========== ENVIAR MENSAJE DE TEXTO ==========
+    // ========== ENVIAR MENSAJE DE TEXTO (Sin cambios) ==========
     public LiveData<Result<MensajeResponse>> enviarMensaje(
             int idUsuario, String mensaje, Integer idConversacion) {
 
@@ -60,7 +73,7 @@ public class ChatRepository {
         return result;
     }
 
-    // ========== ENVIAR MENSAJE CON IMAGEN ==========
+    // ========== ENVIAR MENSAJE CON IMAGEN (Corregido) ==========
     public LiveData<Result<MensajeResponse>> enviarMensajeConImagen(
             int idUsuario, String mensaje, Integer idConversacion, Uri imageUri) {
 
@@ -68,22 +81,11 @@ public class ChatRepository {
         result.setValue(Result.loading());
 
         try {
-            // Obtener archivo real desde la URI
-            File file;
+            // 3. Usar el método helper para obtener el archivo desde la URI
+            File file = getFileFromUri(imageUri);
 
-            // Si es URI de contenido (content://), crear archivo temporal
-            if ("content".equalsIgnoreCase(imageUri.getScheme())) {
-                file = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath(),
-                        "temp_" + System.currentTimeMillis() + ".jpg");
-
-                // Aquí necesitarías un Context - mejor pasar el contexto al constructor
-                // Por ahora usaremos la ruta directamente si es un archivo
-            } else {
-                file = new File(imageUri.getPath());
-            }
-
-            if (!file.exists()) {
-                result.setValue(Result.error("Archivo de imagen no encontrado"));
+            if (file == null || !file.exists()) {
+                result.setValue(Result.error("Archivo de imagen no encontrado o no se pudo leer"));
                 return result;
             }
 
@@ -106,6 +108,7 @@ public class ChatRepository {
                         @Override
                         public void onResponse(Call<MensajeResponse> call,
                                                Response<MensajeResponse> response) {
+                            file.delete(); // 4. Borrar archivo temporal
                             if (response.isSuccessful() && response.body() != null) {
                                 result.setValue(Result.success(response.body()));
                             } else {
@@ -115,6 +118,7 @@ public class ChatRepository {
 
                         @Override
                         public void onFailure(Call<MensajeResponse> call, Throwable t) {
+                            file.delete(); // 4. Borrar archivo temporal
                             result.setValue(Result.error(t.getMessage()));
                         }
                     });
@@ -126,7 +130,7 @@ public class ChatRepository {
         return result;
     }
 
-    // ========== OBTENER TODAS LAS CONVERSACIONES ==========
+    // ========== OBTENER TODAS LAS CONVERSACIONES (Sin cambios) ==========
     public LiveData<Result<List<ConversacionesResponse.ConversacionData>>>
     obtenerConversaciones(int idUsuario) {
 
@@ -156,7 +160,7 @@ public class ChatRepository {
         return result;
     }
 
-    // ========== OBTENER UNA CONVERSACIÓN ESPECÍFICA ==========
+    // ========== OBTENER UNA CONVERSACIÓN ESPECÍFICA (Sin cambios) ==========
     public LiveData<Result<ConversacionesResponse.ConversacionData>>
     obtenerConversacion(int idUsuario, int idConversacion) {
 
@@ -199,7 +203,67 @@ public class ChatRepository {
         return result;
     }
 
-    // ========== CLASE RESULT PARA MANEJO DE ESTADOS ==========
+    // ========== 5. MÉTODOS HELPER PARA MANEJAR LA URI ==========
+
+    /**
+     * Crea un archivo temporal en la caché de la app
+     * a partir de los datos de una content:// URI.
+     */
+    private File getFileFromUri(Uri uri) {
+        try {
+            InputStream inputStream = context.getContentResolver().openInputStream(uri);
+            if (inputStream == null) return null;
+
+            String fileName = getFileName(uri);
+            File tempFile = new File(context.getCacheDir(), fileName);
+
+            OutputStream outputStream = new FileOutputStream(tempFile);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+
+            outputStream.flush();
+            outputStream.close();
+            inputStream.close();
+
+            return tempFile;
+
+        } catch (Exception e) {
+            Log.e("ChatRepository", "Error al crear archivo desde URI", e);
+            return null;
+        }
+    }
+
+    /**
+     * Método helper para obtener el nombre del archivo desde la URI
+     */
+    private String getFileName(Uri uri) {
+        String result = null;
+        if (uri.getScheme().equals("content")) {
+            try (Cursor cursor = context.getContentResolver()
+                    .query(uri, null, null, null, null)) {
+                if (cursor != null && cursor.moveToFirst()) {
+                    int index = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                    if (index >= 0) {
+                        result = cursor.getString(index);
+                    }
+                }
+            }
+        }
+        if (result == null) {
+            result = uri.getPath();
+            int cut = result.lastIndexOf('/');
+            if (cut != -1) {
+                result = result.substring(cut + 1);
+            }
+        }
+        return result != null ? result : "temp_image_" + System.currentTimeMillis();
+    }
+
+
+    // ========== CLASE RESULT PARA MANEJO DE ESTADOS (Sin cambios) ==========
     public static class Result<T> {
         public enum Status { LOADING, SUCCESS, ERROR }
 

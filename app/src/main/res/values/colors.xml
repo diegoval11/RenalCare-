@@ -1,12 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Colores Principales -->
+    <color name="primary_color">#36453B</color>
+    <color name="secondary_color">#596869</color>
+    <color name="tertiary_color">#C2C1A5</color>
+
+    <!-- Paleta de Limon -->
     <color name="renal_dark_green">#36453B</color>
+    <color name="renal_dark_green_80">#5A6159</color>
+    <color name="renal_dark_green_60">#7E8578</color>
+    <color name="renal_dark_green_40">#A2A997</color>
+
+    <!-- Blue-Gray Palette -->
     <color name="renal_blue_gray">#596869</color>
+    <color name="renal_blue_gray_80">#6E8186</color>
+    <color name="renal_blue_gray_60">#839AA3</color>
+    <color name="renal_blue_gray_40">#98B3C0</color>
+
+    <!-- Paleta Gris -->
     <color name="renal_dark_gray">#515751</color>
+    <color name="renal_medium_gray">#6B6D68</color>
+    <color name="renal_light_gray">#8A8D87</color>
+    <color name="renal_pale_gray">#D1D3CE</color>
+
+    <!-- Cream/Sand Palette -->
     <color name="renal_light_cream">#F5F9E9</color>
     <color name="renal_sand">#C2C1A5</color>
+    <color name="renal_sand_light">#DFE0D5</color>
+    <color name="renal_warm_beige">#E8E6D4</color>
 
-    <color name="indicator_dot_color">#666666</color>
+    <!-- Colores neutrales -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="transparent">#00000000</color>
+
+    <!-- Colores de estado -->
+    <color name="success_green">#4CAF50</color>
+    <color name="warning_yellow">#FFC107</color>
+    <color name="error_red">#F44336</color>
+    <color name="info_blue">#2196F3</color>
+
+    <!-- Elementos UI -->
+    <color name="indicator_dot_color">#666666</color>
+    <color name="divider_color">#E8E6D4</color>
+    <color name="hint_text_color">#8A8D87</color>
+    <color name="disabled_text_color">#A2A999</color>
 </resources>

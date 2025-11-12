@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    tools:context=".auth.steps.Step3MedicalFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            style="@style/SignupSectionHeader"
+            android:layout_width="match_parent"
+            android:text="@string/step3_condicion_medica"
+            android:textSize="24sp"
+            android:layout_marginBottom="24dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pregunta_condicion_ren"
+            android:textColor="@color/renal_dark_gray"
+            android:textSize="16sp" />
+
+        <RadioGroup
+            android:id="@+id/rgCondicion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp">
+            <RadioButton android:id="@+id/rbCondicionCronica" android:layout_width="wrap_content" android:layout_height="wrap_content" android:buttonTint="@color/renal_dark_green" android:text="Crónica" android:textColor="@color/renal_dark_gray"/>
+            <RadioButton android:id="@+id/rbCondicionAguda" android:layout_width="wrap_content" android:layout_height="wrap_content" android:buttonTint="@color/renal_dark_green" android:text="Aguda" android:textColor="@color/renal_dark_gray"/>
+            <RadioButton android:id="@+id/rbCondicionNoSe" android:layout_width="wrap_content" android:layout_height="wrap_content" android:buttonTint="@color/renal_dark_green" android:text="No estoy seguro/a" android:textColor="@color/renal_dark_gray"/>
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/pregunta_tratamiento"
+            android:textColor="@color/renal_dark_gray"
+            android:textSize="16sp" />
+
+        <RadioGroup
+            android:id="@+id/rgTratamiento"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp">
+            <RadioButton android:id="@+id/rbTratamientoHemo" android:layout_width="wrap_content" android:layout_height="wrap_content" android:buttonTint="@color/renal_dark_green" android:text="Hemodiálisis" android:textColor="@color/renal_dark_gray"/>
+            <RadioButton android:id="@+id/rbTratamientoPeritoneal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:buttonTint="@color/renal_dark_green" android:text="Diálisis Peritoneal" android:textColor="@color/renal_dark_gray"/>
+            <RadioButton android:id="@+id/rbTratamientoTrasplante" android:layout_width="wrap_content" android:layout_height="wrap_content" android:buttonTint="@color/renal_dark_green" android:text="Trasplante" android:textColor="@color/renal_dark_gray"/>
+            <RadioButton android:id="@+id/rbTratamientoOtro" android:layout_width="wrap_content" android:layout_height="wrap_content" android:buttonTint="@color/renal_dark_green" android:text="Otro / Aún no inicio" android:textColor="@color/renal_dark_gray"/>
+            <RadioButton android:id="@+id/rbTratamientoNoSe" android:layout_width="wrap_content" android:layout_height="wrap_content" android:buttonTint="@color/renal_dark_green" android:text="Mi doctor decidirá" android:textColor="@color/renal_dark_gray"/>
+        </RadioGroup>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/renal_sand_light"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilPeso"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/tu_peso_en_libras"
+            android:textColorHint="@color/renal_dark_gray"
+            app:boxStrokeColor="@color/renal_dark_green"
+            app:hintTextColor="@color/renal_dark_green"
+            app:suffixText="lbs"
+            app:suffixTextColor="@color/renal_dark_gray">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etPeso"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:textColor="@color/renal_dark_gray"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <CheckBox
+            android:id="@+id/cbPesoOmitido"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_se_mi_peso"
+            android:buttonTint="@color/renal_dark_green"
+            android:textColor="@color/renal_dark_gray"
+            android:layout_marginTop="4dp"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilCreatinina"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="@string/ejemplo_creatina"
+            android:textColorHint="@color/renal_dark_gray"
+            app:boxStrokeColor="@color/renal_dark_green"
+            app:hintTextColor="@color/renal_dark_green"
+            app:suffixText="mg/dL"
+            app:suffixTextColor="@color/renal_dark_gray">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etCreatinina"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:textColor="@color/renal_dark_gray"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <CheckBox
+            android:id="@+id/cbCreatininaOmitida"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_tengo_este_dato"
+            android:buttonTint="@color/renal_dark_green"
+            android:textColor="@color/renal_dark_gray"
+            android:layout_marginTop="4dp"/>
+
+    </LinearLayout>
+</ScrollView>
