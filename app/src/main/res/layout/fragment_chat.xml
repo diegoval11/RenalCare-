@@ -72,8 +72,6 @@
             android:layout_marginTop="16dp"/>
 
         <!-- RecyclerView del Chat -->
-
-        <!-- Preview de Imagen -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_chat"
             android:layout_width="match_parent"
@@ -86,6 +84,7 @@
             tools:layout_editor_absoluteX="25dp"
             tools:listitem="@layout/item_chat_message_received" />
 
+        <!-- Preview de Imagen -->
         <androidx.cardview.widget.CardView
             android:id="@+id/image_preview_container"
             android:layout_width="120dp"
@@ -150,6 +149,22 @@
                 android:maxLines="4"
                 android:textColor="@color/black"
                 android:textColorHint="@color/renal_dark_gray"/>
+
+            <!--
+                *** BOTÓN DE VOZ MODIFICADO ***
+                - Cambiado a 48dp x 48dp (para ser visible)
+                - Añadido tint de color oscuro (renal_dark_gray)
+                - Añadido margen para separarlo
+            -->
+            <ImageButton
+                android:id="@+id/btn_voice_chat"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/ic_mic"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/renal_dark_gray"
+                android:contentDescription="Iniciar chat de voz" />
 
             <ImageButton
                 android:id="@+id/btn_send_chat"

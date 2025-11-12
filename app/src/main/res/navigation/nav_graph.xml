@@ -12,12 +12,19 @@
         android:label="Inicio"
         tools:layout="@layout/fragment_inicio" />
 
-    <!-- ARREGLADO: Añadido el paquete ".ui" -->
+    <!-- ARREGLADO: Añadido el paquete ".ui" Y LA ACCIÓN DE VOZ -->
     <fragment
         android:id="@+id/nav_chat"
         android:name="itca.soft.renalcare.ui.chat.ChatFragment"
         android:label="Chat"
-        tools:layout="@layout/fragment_chat" />
+        tools:layout="@layout/fragment_chat" >
+
+        <!-- ACCIÓN AÑADIDA: Para ir al chat de voz -->
+        <action
+            android:id="@+id/action_chatFragment_to_voiceChatFragment"
+            app:destination="@id/nav_voice_chat"/>
+
+    </fragment>
 
     <!-- Este ya estaba correcto -->
     <fragment
@@ -32,5 +39,13 @@
         android:name="itca.soft.renalcare.ui.perfil.PerfilFragment"
         android:label="Perfil"
         tools:layout="@layout/fragment_perfil" />
+
+    <!-- DESTINO AÑADIDO: El fragmento del chat de voz -->
+    <fragment
+        android:id="@+id/nav_voice_chat"
+        android:name="itca.soft.renalcare.ui.voice.VoiceChatFragment"
+        android:label="Asistente de Voz"
+        tools:layout="@layout/fragment_voice_chat" />
+
 
 </navigation>

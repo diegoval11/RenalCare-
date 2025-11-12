@@ -26,6 +26,8 @@ import androidx.core.content.FileProvider;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -51,6 +53,9 @@ public class ChatFragment extends Fragment {
     private CardView imagePreviewContainer;
     private ImageView imagePreview;
     private ImageButton btnRemoveImage;
+
+    // --- 1. AÑADIR VARIABLE PARA EL BOTÓN DE VOZ ---
+    private ImageButton btnVoiceChat;
 
     // Adapters
     private ChatAdapter chatAdapter;
@@ -154,6 +159,9 @@ public class ChatFragment extends Fragment {
         imagePreviewContainer = view.findViewById(R.id.image_preview_container);
         imagePreview = view.findViewById(R.id.image_preview);
         btnRemoveImage = view.findViewById(R.id.btn_remove_image);
+
+        // --- 2. ENCONTRAR EL BOTÓN DE VOZ ---
+        btnVoiceChat = view.findViewById(R.id.btn_voice_chat);
     }
 
     private void setupViewModel() {
@@ -200,6 +208,23 @@ public class ChatFragment extends Fragment {
         btnMenu.setOnClickListener(v -> drawerLayout.openDrawer(androidx.core.view.GravityCompat.START));
         btnNewChat.setOnClickListener(v -> nuevaConversacion());
         btnRemoveImage.setOnClickListener(v -> quitarImagen());
+
+        // --- 3. CONFIGURAR EL LISTENER DEL BOTÓN DE VOZ ---
+        if (btnVoiceChat != null) {
+            btnVoiceChat.setOnClickListener(v -> {
+                try {
+                    // Obtiene el NavController desde el Fragment
+                    NavController navController = Navigation.findNavController(v);
+
+                    // Ejecuta la acción de navegación que definimos en mobile_navigation.xml
+                    // (Asegúrate de que el ID 'action_chatFragment_to_voiceChatFragment' existe en tu XML)
+                    navController.navigate(R.id.action_chatFragment_to_voiceChatFragment);
+
+                } catch (Exception e) {
+                    Toast.makeText(getContext(), "Error al navegar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     // --- CORREGIDO ---
