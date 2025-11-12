@@ -1,13 +1,9 @@
-// build.gradle (Module: app)
-
 plugins {
-    // 1. SINTAXIS GROOVY: 'alias' no usa paréntesis ()
     alias libs.plugins.android.application
 }
 
 android {
     namespace 'itca.soft.renalcare'
-    // 2. SINTAXIS GROOVY: 'compileSdk' es solo el número
     compileSdk 34
 
     defaultConfig {
@@ -26,6 +22,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
@@ -33,27 +30,22 @@ android {
 }
 
 dependencies {
-    // 3. SINTAXIS GROOVY: Las dependencias no usan paréntesis ()
+    // AndroidX
     implementation libs.appcompat
-    implementation libs.material // <-- Esta es la dependencia que fallaba
+    implementation libs.material
     implementation libs.activity
     implementation libs.constraintlayout
     implementation libs.navigation.fragment
     implementation libs.navigation.ui
-    implementation 'com.google.android.material:material:1.10.0'
 
-
-    // RecyclerView (para las listas)
+    // RecyclerView
     implementation 'androidx.recyclerview:recyclerview:1.3.2'
-
-    testImplementation libs.junit
-    androidTestImplementation libs.ext.junit
-    androidTestImplementation libs.espresso.core
 
     // Retrofit + Gson
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.11.0'
+    implementation 'com.google.code.gson:gson:2.10.1'
 
     // Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
@@ -65,20 +57,47 @@ dependencies {
 
     // Glide para imágenes
     implementation 'com.github.bumptech.glide:glide:4.16.0'
-
-    implementation 'com.github.bumptech.glide:glide:4.16.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
-    implementation 'androidx.activity:activity-ktx:1.8.2'
-    implementation 'androidx.drawerlayout:drawerlayout:1.2.0'
-    implementation 'com.google.android.material:material:1.11.0'
 
     // WebRTC para chat de voz
     implementation 'io.getstream:stream-webrtc-android:1.1.3'
 
-    // O usa la versión oficial de Google
-    // implementation 'org.webrtc:google-webrtc:1.0.32006'
+    // Material
+    implementation 'com.google.android.material:material:1.11.0'
+    implementation 'androidx.activity:activity-ktx:1.8.2'
+    implementation 'androidx.drawerlayout:drawerlayout:1.2.0'
 
-    // Coroutines para manejar operaciones asíncronas
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
+    // ⭐ Socket.IO para WebSocket (Alternativa JitPack)
+    implementation 'org.json:json:20231013'
 
+    implementation 'io.socket:socket.io-client:2.1.0'
+    implementation 'org.json:json:20231013'
+
+
+    // Testing
+    testImplementation libs.junit
+    androidTestImplementation libs.ext.junit
+    androidTestImplementation libs.espresso.core
+
+    // Socket.IO
+    implementation 'io.socket:socket.io-client:2.1.0'
+
+    // Material Design
+    implementation 'com.google.android.material:material:1.9.0'
+
+    // RecyclerView
+    implementation 'androidx.recyclerview:recyclerview:1.3.0'
+
+    // Fragment
+    implementation 'androidx.fragment:fragment:1.6.1'
+
+    // Gson (para parsear JSON)
+    implementation 'com.google.code.gson:gson:2.10.1'
+
+    // Retrofit (si usas para API REST)
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+    // Otros
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 }

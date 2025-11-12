@@ -1,58 +1,46 @@
-    package itca.soft.renalcare;
+package itca.soft.renalcare;
 
-    import android.os.Bundle;
-    import androidx.appcompat.app.AppCompatActivity;
-    import androidx.fragment.app.FragmentTransaction;
-    import androidx.navigation.NavController;
-    import androidx.navigation.fragment.NavHostFragment;
-    import androidx.navigation.ui.NavigationUI;
-    import com.google.android.material.appbar.MaterialToolbar;
-    import com.google.android.material.bottomnavigation.BottomNavigationView;
+import android.os.Bundle;
+import androidx.appcompat.app.AppCompatActivity;
 
-    import itca.soft.renalcare.ui.chat.ChatFragment;
-    import itca.soft.renalcare.ui.voice.VoiceChatFragment;
+import itca.soft.renalcare.ui.websoket.ChatListFragment;
+import itca.soft.renalcare.data.network.WebSocketService;
 
-    public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_main);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-            if (savedInstanceState == null) {
-                VoiceChatFragment voiceChatFragment = new VoiceChatFragment();
-                FragmentTransaction transaction = getSupportFragmentManager()
-                        .beginTransaction();
-                transaction.replace(android.R.id.content, voiceChatFragment);
-                transaction.commit();
+        if (savedInstanceState == null) {
+            // Conectar WebSocket
+            WebSocketService wsService = WebSocketService.getInstance();
+            if (!wsService.isConnected()) {
+                wsService.connect();
+                wsService.registerUser("2"); // Usuario logueado
             }
-            /*
-            // 1. Encontrar los componentes del layout
-            MaterialToolbar toolbar = findViewById(R.id.toolbar);
-            BottomNavigationView bottomNavView = findViewById(R.id.bottom_navigation_view);
 
-            // 2. Obtener el NavHostFragment y el NavController
-            // Esto es el "cerebro" que maneja el cambio de fragmentos
-            NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
-                    .findFragmentById(R.id.nav_host_fragment);
-            NavController navController = navHostFragment.getNavController();
+            // Abrir ChatListFragment (lista de conversaciones)
+            ChatListFragment listFragment = new ChatListFragment();
+            Bundle args = new Bundle();
+            args.putString("id_usuario", "2");
+            args.putString("nombre_usuario", "Dr. Juan Pérez");
+            listFragment.setArguments(args);
 
-            // 3. Conectar la Toolbar
-            setSupportActionBar(toolbar); // Establece la toolbar como la barra de acción
-            NavigationUI.setupActionBarWithNavController(this, navController);
-
-            // 4. Conectar el BottomNavigationView
-            // ¡Esta línea hace toda la magia!
-            // Automáticamente maneja los clics y cambia al fragmento correcto
-            NavigationUI.setupWithNavController(bottomNavView, navController);*/
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, listFragment)
+                    .commit();
         }
-
-
-/*
-        // Necesario para que el botón "atrás" de la toolbar funcione
-        @Override
-        public boolean onSupportNavigateUp() {
-            NavController navController = ((NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment)).getNavController();
-            return navController.navigateUp() || super.onSupportNavigateUp();
-        }*/
     }
+
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
+    }
+}
