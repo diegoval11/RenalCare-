@@ -1,6 +1,9 @@
 package itca.soft.renalcare.ui.perfil;
 
 import android.Manifest;
+// ¡CAMBIO! Imports añadidos
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,6 +32,7 @@ import java.util.List;
 import java.util.Locale;
 
 import itca.soft.renalcare.R;
+import itca.soft.renalcare.auth.LoginActivity; // ¡CAMBIO! Import añadido
 import itca.soft.renalcare.data.models.MedicationItem;
 import itca.soft.renalcare.data.models.ReminderItem;
 import itca.soft.renalcare.data.network.RecordatorioApiService;
@@ -50,6 +54,10 @@ public class MedicationManagementActivity extends AppCompatActivity implements R
     private TextView btnBack;
     private List<MedicationItem> prescriptionList = new ArrayList<>();
 
+    // --- ¡CAMBIO! ---
+    // El ID ahora es una variable de clase, no se hardcodea
+    private int idPacienteLogueado;
+
     // Launcher de permisos (sin cambios)
     private final String[] REQUIRED_PERMISSIONS = { Manifest.permission.POST_NOTIFICATIONS, Manifest.permission.SCHEDULE_EXACT_ALARM };
     private final ActivityResultLauncher<String[]> requestPermissionLauncher =
@@ -67,6 +75,20 @@ public class MedicationManagementActivity extends AppCompatActivity implements R
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_medication_management);
+
+        // --- ¡CAMBIO! ---
+        // Cargar el ID del paciente dinámicamente al crear la actividad
+        SharedPreferences prefs = getSharedPreferences(LoginActivity.PREFS_NAME, Context.MODE_PRIVATE);
+        // Asignamos el ID a la variable de la clase
+        idPacienteLogueado = prefs.getInt("id_usuario", -1);
+
+        if (idPacienteLogueado == -1) {
+            Toast.makeText(this, "Error de sesión: ID no encontrado.", Toast.LENGTH_LONG).show();
+            Log.e(TAG, "ID de usuario no encontrado en SharedPreferences.");
+            finish(); // Cierra la actividad si no hay ID
+            return; // Detiene la ejecución de onCreate
+        }
+        // --- FIN DEL CAMBIO ---
 
         apiService = RetrofitClient.getClient().create(RecordatorioApiService.class);
 
@@ -107,7 +129,9 @@ public class MedicationManagementActivity extends AppCompatActivity implements R
 
     // Esta función solo se llama la PRIMERA vez que se carga la actividad
     private void loadPendingReminders() {
-        int idPacienteLogueado = 2; // (¡Recuerda cambiar esto!)
+        // --- ¡CAMBIO! ---
+        // int idPacienteLogueado = 2; // (LÍNEA ELIMINADA)
+        // Ahora usa la variable de clase 'idPacienteLogueado'
         Call<List<ReminderItem>> call = apiService.getPendingReminders(idPacienteLogueado);
         call.enqueue(new Callback<List<ReminderItem>>() {
             @Override
@@ -202,9 +226,10 @@ public class MedicationManagementActivity extends AppCompatActivity implements R
                     }
                     // --- Fin Validación ---
 
-                    int idPacienteLogueado = 2; // (¡Recuerda cambiar esto!)
+                    // --- ¡CAMBIO! ---
+                    // int idPacienteLogueado = 2; // (LÍNEA ELIMINADA)
 
-                    // --- Usar el nuevo constructor con dias_semana ---
+                    // --- Usar el nuevo constructor con dias_semana y el ID de clase ---
                     MedicationItem newMed = new MedicationItem(idPacienteLogueado, nombre, dosis, horario, notas, dias_semana);
                     createNewMedication(newMed);
                 })
@@ -215,7 +240,9 @@ public class MedicationManagementActivity extends AppCompatActivity implements R
 
     // --- MODIFICADO: showPrescriptionPicker ahora también rellena los días y la hora ---
     private void showPrescriptionPicker(EditText etMedName, EditText etMedDose, TimePicker tpMedTime, ChipGroup chipGroup) {
-        int idPacienteLogueado = 2; // (¡Recuerda cambiar esto!)
+        // --- ¡CAMBIO! ---
+        // int idPacienteLogueado = 2; // (LÍNEA ELIMINADA)
+        // Ahora usa la variable de clase 'idPacienteLogueado'
         apiService.getMedicamentos(idPacienteLogueado).enqueue(new Callback<List<MedicationItem>>() {
             @Override
             public void onResponse(Call<List<MedicationItem>> call, Response<List<MedicationItem>> response) {

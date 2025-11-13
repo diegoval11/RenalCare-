@@ -1,5 +1,8 @@
-// VoiceChatFragment.java
 package itca.soft.renalcare.ui.voice;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+import itca.soft.renalcare.auth.LoginActivity;
 
 import android.Manifest;
 import android.animation.AnimatorSet;
@@ -39,8 +42,10 @@ public class VoiceChatFragment extends Fragment {
     private TextView tvStatus;
     private ProgressBar progressBar;
 
-    // ID Usuario
-    private int idUsuario = 2;
+    // --- ¡CAMBIO 2! ID de Usuario ahora es dinámico ---
+    // private int idUsuario = 2; // <- Línea antigua eliminada
+    private int idUsuario; // Se cargará desde SharedPreferences
+    // --- Fin del Cambio 2 ---
 
     // Estado de conexión
     private boolean isConnected = false;
@@ -66,10 +71,23 @@ public class VoiceChatFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // --- ¡CAMBIO 3! Cargar ID de usuario dinámicamente ---
+        SharedPreferences prefs = requireActivity().getSharedPreferences(LoginActivity.PREFS_NAME, Context.MODE_PRIVATE);
+        // 'idUsuario' ahora se refiere a la variable de la clase
+        idUsuario = prefs.getInt("id_usuario", -1);
+
+        if (idUsuario == -1) {
+            Toast.makeText(getContext(), "Error de sesión: ID no encontrado.", Toast.LENGTH_SHORT).show();
+            // Opcional: navegar de vuelta
+            // requireActivity().onBackPressed(); 
+            return; // No continuar si no hay ID
+        }
+        // --- Fin del Cambio 3 ---
+
         initViews(view);
         setupViewModel();
 
-        // 🔹 Iniciar sesión automáticamente al entrar
+        // 🔹 Iniciar sesión automáticamente al entrar (¡Ahora usa el ID dinámico!)
         verificarPermisoMicrofono();
     }
 
@@ -88,7 +106,7 @@ public class VoiceChatFragment extends Fragment {
     }
 
     private void initViews(View view) {
-       // btnMicrophone = view.findViewById(R.id.btn_microphone);
+        // btnMicrophone = view.findViewById(R.id.btn_microphone);
         tvStatus = view.findViewById(R.id.tv_status);
         progressBar = view.findViewById(R.id.progress_bar);
         ivVoiceIndicator = view.findViewById(R.id.iv_voice_indicator);
@@ -132,6 +150,7 @@ public class VoiceChatFragment extends Fragment {
 
     private void iniciarSesionVoz() {
         tvStatus.setText("Solicitando sesión...");
+        // ¡Esta línea ahora usa automáticamente el 'idUsuario' dinámico de la clase!
         viewModel.iniciarSesionVoz(idUsuario);
     }
 
@@ -181,14 +200,12 @@ public class VoiceChatFragment extends Fragment {
 
     private void resetUI() {
         isConnected = false;
-        //btnMicrophone.setImageResource(R.drawable.ic_mic);
-        //btnMicrophone.setEnabled(true);
+
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        // 🔹 Detener sesión automáticamente al salir del fragmento
         if (isConnected) {
             detenerSesion();
         }

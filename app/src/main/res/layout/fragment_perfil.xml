@@ -14,7 +14,6 @@
         android:orientation="vertical"
         android:paddingBottom="16dp">
 
-        <!-- ===== HEADER ===== -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
@@ -43,7 +42,6 @@
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!-- ===== PERFIL CARD ===== -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -75,7 +73,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:text="Ana Martínez"
+                    android:text="Cargando..."
                     android:textColor="@color/black"
                     android:textSize="20sp"
                     android:textStyle="bold"
@@ -86,7 +84,7 @@
                     android:id="@+id/tv_user_age"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="58 años"
+                    android:text=""
                     android:textColor="@color/black"
                     android:textSize="16sp"
                     app:layout_constraintStart_toStartOf="@id/tv_user_name"
@@ -94,7 +92,6 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- ===== DIAGNÓSTICO ===== -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -130,7 +127,7 @@
                     android:id="@+id/tv_diagnosis_stage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Etapa 4"
+                    android:text="Cargando..."
                     android:textColor="@color/white"
                     android:textStyle="bold"
                     android:textSize="18sp" />
@@ -147,14 +144,13 @@
                     android:id="@+id/tv_diagnosis_treatment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Hemodiálisis"
+                    android:text="Cargando..."
                     android:textColor="@color/white"
                     android:textStyle="bold"
                     android:textSize="18sp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- ===== MEDICAMENTOS con ViewPager ===== -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -244,7 +240,6 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- ===== METAS DIARIAS ===== -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -266,8 +261,6 @@
                 <include layout="@layout/item_goal_progress" android:id="@+id/goal_peso" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
-
-        <!-- (Puedes mantener tu card de laboratorios y contacto igual que antes si lo deseas) -->
 
     </LinearLayout>
 </ScrollView>

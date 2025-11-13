@@ -1,6 +1,10 @@
 // ChatFragment.java - VERSIÓN COMPLETA Y CORREGIDA
 package itca.soft.renalcare.ui.chat;
 
+// ¡CAMBIO! Imports añadidos para SharedPreferences
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -40,6 +44,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import itca.soft.renalcare.R;
+import itca.soft.renalcare.auth.LoginActivity; // ¡CAMBIO! Import añadido
 import itca.soft.renalcare.data.models.ConversacionItem;
 
 public class ChatFragment extends Fragment {
@@ -68,8 +73,9 @@ public class ChatFragment extends Fragment {
     private Uri selectedImageUri; // Esta será la content:// URI (de cámara o galería)
     private Uri cameraImageUri;   // Variable temporal para guardar la content:// URI de la cámara
 
-    // ID Usuario (cambiar por tu sistema de auth)
-    private int idUsuario = 2; // Asegúrate de que este sea el ID de usuario correcto
+    // --- ¡CAMBIO! El ID ya no se hardcodea ---
+    // private int idUsuario = 2; // <- Línea antigua
+    private int idUsuario; // Se asignará en onViewCreated
 
     // Launchers para permisos e imágenes
     private ActivityResultLauncher<String> requestPermissionLauncher;
@@ -93,12 +99,27 @@ public class ChatFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // --- ¡CAMBIO! Cargar ID de usuario dinámicamente ---
+        SharedPreferences prefs = requireActivity().getSharedPreferences(LoginActivity.PREFS_NAME, Context.MODE_PRIVATE);
+        // 'idUsuario' ahora se refiere a la variable de la clase
+        idUsuario = prefs.getInt("id_usuario", -1);
+
+        if (idUsuario == -1) {
+            Toast.makeText(getContext(), "Error de sesión: ID no encontrado.", Toast.LENGTH_SHORT).show();
+            // Opcional: navegar de vuelta al login
+            // NavController navController = Navigation.findNavController(view);
+            // navController.navigate(R.id.action_global_to_login); // (Si existe tal acción)
+            return; // No continuar si no hay ID
+        }
+        // --- Fin del cambio ---
+
+
         initViews(view);
         setupViewModel();
         setupRecyclerViews();
         setupClickListeners();
 
-        // Cargar historial al inicio
+        // Cargar historial al inicio (¡Ahora usa el ID dinámico!)
         viewModel.cargarConversaciones(idUsuario);
     }
 
@@ -233,11 +254,11 @@ public class ChatFragment extends Fragment {
 
         // Ya no se usa getRealPathFromURI ni se crea una file:// URI
         if (selectedImageUri != null) {
-            // Enviar la 'selectedImageUri' (que es content://) directamente
+            // ¡Ahora usa el ID dinámico!
             viewModel.enviarMensajeConImagen(idUsuario, mensaje, selectedImageUri);
             quitarImagen(); // Limpiar la preview
         } else if (!mensaje.isEmpty()) {
-            // Enviar solo texto
+            // ¡Ahora usa el ID dinámico!
             viewModel.enviarMensaje(idUsuario, mensaje);
         } else {
             // No hacer nada si está vacío
@@ -327,6 +348,7 @@ public class ChatFragment extends Fragment {
     }
 
     private void cargarConversacion(ConversacionItem conversacion) {
+        // ¡Ahora usa el ID dinámico!
         viewModel.cargarMensajesDeConversacion(idUsuario, conversacion.getIdConversacion());
         drawerLayout.closeDrawers();
         Toast.makeText(requireContext(),

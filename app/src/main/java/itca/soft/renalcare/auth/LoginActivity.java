@@ -36,6 +36,17 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // --- ¡CAMBIO! INICIO DE VERIFICACIÓN DE SESIÓN ---
+        // Se comprueba ANTES de inflar la vista (setContentView)
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        if (prefs.getBoolean("estaLogueado", false)) {
+            // El usuario ya está logueado, saltar a MainActivity
+            irAMainActivity();
+            return; // Evita que se ejecute el resto de onCreate
+        }
+        // --- ¡CAMBIO! FIN DE VERIFICACIÓN DE SESIÓN ---
+
         setContentView(R.layout.activity_login);
 
         // Ocultar la barra de acción
@@ -102,11 +113,9 @@ public class LoginActivity extends AppCompatActivity {
                         // Mostramos bienvenida y redirigimos a MainActivity
                         Toast.makeText(LoginActivity.this, "¡Bienvenido, " + nombre + "!", Toast.LENGTH_LONG).show();
 
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        // Limpiamos la pila para que el usuario no pueda "volver" al login
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                        finish(); // Cerramos LoginActivity
+                        // --- ¡CAMBIO! ---
+                        // Se usa el nuevo método helper
+                        irAMainActivity();
 
                     } else {
                         // --- Login Fallido (Usuario o PIN incorrecto) ---
@@ -143,5 +152,17 @@ public class LoginActivity extends AppCompatActivity {
 
         // Aplicamos los cambios
         editor.apply();
+    }
+
+    // --- ¡CAMBIO! NUEVO MÉTODO HELPER ---
+    /**
+     * Navega a MainActivity y limpia la pila de actividades.
+     */
+    private void irAMainActivity() {
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        // Limpiamos la pila para que el usuario no pueda "volver" al login
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish(); // Cerramos LoginActivity
     }
 }

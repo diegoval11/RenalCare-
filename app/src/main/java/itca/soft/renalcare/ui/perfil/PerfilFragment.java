@@ -2,6 +2,7 @@ package itca.soft.renalcare.ui.perfil;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,10 +15,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+// --- ¡CAMBIO! Import añadido ---
+import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
-// (El resto de tus imports)
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -25,16 +29,21 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import itca.soft.renalcare.R;
+import itca.soft.renalcare.auth.LoginActivity;
 import itca.soft.renalcare.data.models.MedicationItem;
+import itca.soft.renalcare.data.models.PacienteInfoResponse;
 import itca.soft.renalcare.data.models.ReminderItem;
 import itca.soft.renalcare.data.models.TodayReminderStatus;
 import itca.soft.renalcare.data.network.RecordatorioApiService;
+import itca.soft.renalcare.data.network.RetrofitClient;
 import itca.soft.renalcare.data.network.UpdateStatusBody;
 import itca.soft.renalcare.notifications.AlarmScheduler;
-import itca.soft.renalcare.data.network.RetrofitClient;
+// Importa el ViewModel desde la ubicación correcta
+import itca.soft.renalcare.ui.MainViewModel;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -43,17 +52,25 @@ public class PerfilFragment extends Fragment implements OnMedicationTakeListener
 
     private static final String TAG = "PerfilFragment";
 
+    // --- Variables para ViewModel ---
+    private MainViewModel mainViewModel;
+
+    // --- Variables de Medicamentos (Lógica existente) ---
     private ViewPager2 viewPagerMedications;
     private TabLayout tabLayoutIndicator;
     private MedicationPagerAdapter pagerAdapter;
-
     private ImageView iconMedNotification;
     private RecordatorioApiService apiService;
     private List<MedicationItem> medicationList = new ArrayList<>();
-
     private Map<Integer, TodayReminderStatus> statusMap = new HashMap<>();
+    private int idPacienteLogueado; // Se obtiene de SharedPreferences
 
-    private int idPacienteLogueado = 2;
+    // --- Variables para Metas (Goals) ---
+    private View goalSodio, goalPotasio, goalFosforo, goalPeso;
+    private TextView tvUserName, tvUserAge, tvDiagnosisStage, tvDiagnosisTreatment;
+
+    // --- ¡CAMBIO! Variable para el botón de settings ---
+    private ImageView iconSettings;
 
     @Nullable
     @Override
@@ -65,9 +82,19 @@ public class PerfilFragment extends Fragment implements OnMedicationTakeListener
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // --- 1. Obtener ID del Paciente desde SharedPreferences ---
+        SharedPreferences prefs = requireActivity().getSharedPreferences(LoginActivity.PREFS_NAME, Context.MODE_PRIVATE);
+        idPacienteLogueado = prefs.getInt("id_usuario", -1);
 
+        if (idPacienteLogueado == -1) {
+            Toast.makeText(getContext(), "Error de sesión: ID no encontrado.", Toast.LENGTH_SHORT).show();
+            // Aquí podrías cerrar el fragmento o redirigir al Login
+            return;
+        }
+
+        // --- 2. Lógica existente de Medicamentos (se mantiene) ---
+        // (Esta lógica alimenta el carrusel de medicamentos)
         apiService = RetrofitClient.getClient().create(RecordatorioApiService.class);
-
         iconMedNotification = view.findViewById(R.id.icon_med_notification);
         if (iconMedNotification != null) {
             iconMedNotification.setOnClickListener(v -> {
@@ -75,13 +102,123 @@ public class PerfilFragment extends Fragment implements OnMedicationTakeListener
                 startActivity(intent);
             });
         }
-
         viewPagerMedications = view.findViewById(R.id.viewpager_medications);
         tabLayoutIndicator = view.findViewById(R.id.tablayout_med_indicator);
         setupViewPager();
-        loadMedicationData();
-        setupGoalBars(view);
+        loadMedicationData(); // Se mantiene para el carrusel de meds
+
+        // --- 3. Inicializar vistas de Perfil y Metas ---
+        tvUserName = view.findViewById(R.id.tv_user_name);
+        tvUserAge = view.findViewById(R.id.tv_user_age);
+        tvDiagnosisStage = view.findViewById(R.id.tv_diagnosis_stage);
+        tvDiagnosisTreatment = view.findViewById(R.id.tv_diagnosis_treatment);
+
+        goalSodio = view.findViewById(R.id.goal_sodio);
+        goalPotasio = view.findViewById(R.id.goal_potasio);
+        goalFosforo = view.findViewById(R.id.goal_fosforo);
+        goalPeso = view.findViewById(R.id.goal_peso);
+
+        // El setupGoalBars() con datos mock se elimina
+
+        // --- 4. Inicializar ViewModel y Observador (NUEVA LÓGICA) ---
+        // (Esta lógica alimenta el Header del Perfil y las Metas)
+        mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+
+        mainViewModel.getPacienteInfo().observe(getViewLifecycleOwner(), new Observer<PacienteInfoResponse>() {
+            @Override
+            public void onChanged(PacienteInfoResponse pacienteInfo) {
+                // Se llamará automáticamente cuando los datos estén listos
+                if (pacienteInfo != null) {
+                    // ¡Datos recibidos! Actualizamos la UI
+                    Log.d(TAG, "Datos de PacienteInfoResponse recibidos. Actualizando UI.");
+                    actualizarPerfilHeader(pacienteInfo);
+                    actualizarMetas(pacienteInfo);
+                } else {
+                    // Error de red o API
+                    Log.e(TAG, "Error al obtener PacienteInfoResponse (null)");
+                    Toast.makeText(getContext(), "No se pudieron cargar datos del perfil", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        // --- 5. ¡CAMBIO! INICIO DE LÓGICA PARA CERRAR SESIÓN ---
+        iconSettings = view.findViewById(R.id.icon_settings);
+        if (iconSettings != null) {
+            iconSettings.setOnClickListener(v -> {
+                mostrarMenuCerrarSesion(v);
+            });
+        }
+        // --- ¡CAMBIO! FIN DE LÓGICA ---
     }
+
+    /**
+     * NUEVO MÉTODO: Actualiza el header del perfil y el diagnóstico.
+     */
+    private void actualizarPerfilHeader(PacienteInfoResponse info) {
+        if (tvUserName != null) {
+            tvUserName.setText(info.getNombrePaciente());
+        }
+        // Nota: La edad requiere cálculo. Por ahora, dejamos el campo del XML
+        // if (tvUserAge != null) {
+        //    tvUserAge.setText(calcularEdad(info.getFechaNacimiento()) + " años");
+        // }
+        if (tvDiagnosisStage != null) {
+            tvDiagnosisStage.setText(info.getCondicionRenal()); // Ej. "Etapa 4"
+        }
+        if (tvDiagnosisTreatment != null) {
+            tvDiagnosisTreatment.setText(info.getTipoTratamiento()); // Ej. "Hemodiálisis"
+        }
+    }
+
+    /**
+     * MÉTODO MODIFICADO: Reemplaza a setupGoalBars(). Ahora usa datos del ViewModel.
+     */
+    private void actualizarMetas(PacienteInfoResponse info) {
+
+        // --- 💡 NOTA IMPORTANTE ---
+        // Tu API (getAllInfoByID) solo provee "peso".
+        // Los límites de Sodio, Potasio y Fósforo NO están en ese JSON.
+        // Para que sean dinámicos, debes añadirlos a tu query en el backend.
+        // Por ahora, solo "Peso" será dinámico.
+
+        // Datos de ejemplo (Mock) para metas no provistas por la API
+        String limiteSodio = "Máx. 2,000 mg";
+        int progresoSodio = 80;
+        String limitePotasio = "Máx. 2,500 mg";
+        int progresoPotasio = 60;
+        String limiteFosforo = "Máx. 1,000 mg";
+        int progresoFosforo = 75;
+
+        // Dato REAL desde la API
+        String metaPeso = String.format(Locale.US, "%.1f kg", info.getPeso()); // Formateado
+        int progresoPeso = 90; // (Progreso sigue siendo mock, necesitas una meta)
+
+        if (goalSodio != null) {
+            ((TextView) goalSodio.findViewById(R.id.tv_goal_label)).setText("Límite de Sodio");
+            ((TextView) goalSodio.findViewById(R.id.tv_goal_value)).setText(limiteSodio);
+            ((ProgressBar) goalSodio.findViewById(R.id.progress_goal)).setProgress(progresoSodio);
+        }
+        if (goalPotasio != null) {
+            ((TextView) goalPotasio.findViewById(R.id.tv_goal_label)).setText("Límite de Potasio");
+            ((TextView) goalPotasio.findViewById(R.id.tv_goal_value)).setText(limitePotasio);
+            ((ProgressBar) goalPotasio.findViewById(R.id.progress_goal)).setProgress(progresoPotasio);
+        }
+        if (goalFosforo != null) {
+            ((TextView) goalFosforo.findViewById(R.id.tv_goal_label)).setText("Límite de Fósforo");
+            ((TextView) goalFosforo.findViewById(R.id.tv_goal_value)).setText(limiteFosforo);
+            ((ProgressBar) goalFosforo.findViewById(R.id.progress_goal)).setProgress(progresoFosforo);
+        }
+        if (goalPeso != null) {
+            ((TextView) goalPeso.findViewById(R.id.tv_goal_label)).setText("Peso Seco");
+            ((TextView) goalPeso.findViewById(R.id.tv_goal_value)).setText(metaPeso); // ¡DATO REAL!
+            ((ProgressBar) goalPeso.findViewById(R.id.progress_goal)).setProgress(progresoPeso);
+        }
+    }
+
+
+    // ==================================================================
+    // --- LÓGICA DE MEDICAMENTOS EXISTENTE (SIN CAMBIOS) ---
+    // ==================================================================
 
     private void setupViewPager() {
         pagerAdapter = new MedicationPagerAdapter(this, statusMap);
@@ -96,6 +233,7 @@ public class PerfilFragment extends Fragment implements OnMedicationTakeListener
         medicationList.clear();
         statusMap.clear();
 
+        // Usa el idPacienteLogueado obtenido de SharedPreferences
         apiService.getMedicamentos(idPacienteLogueado).enqueue(new Callback<List<MedicationItem>>() {
             @Override
             public void onResponse(Call<List<MedicationItem>> call, Response<List<MedicationItem>> response) {
@@ -114,6 +252,7 @@ public class PerfilFragment extends Fragment implements OnMedicationTakeListener
     }
 
     private void loadTodayStatus() {
+        // Usa el idPacienteLogueado obtenido de SharedPreferences
         apiService.getTodayReminderStatus(idPacienteLogueado).enqueue(new Callback<List<TodayReminderStatus>>() {
             @Override
             public void onResponse(Call<List<TodayReminderStatus>> call, Response<List<TodayReminderStatus>> response) {
@@ -145,6 +284,7 @@ public class PerfilFragment extends Fragment implements OnMedicationTakeListener
 
         Log.d(TAG, "Marcando como 'completado' el recordatorio: " + status.getId_recordatorio());
 
+        // Usa el idPacienteLogueado obtenido de SharedPreferences
         UpdateStatusBody body = new UpdateStatusBody("completado", idPacienteLogueado);
         apiService.updateReminderStatus(status.getId_recordatorio(), body).enqueue(new Callback<Void>() {
             @Override
@@ -157,23 +297,18 @@ public class PerfilFragment extends Fragment implements OnMedicationTakeListener
                         AlarmScheduler.cancelAlarm(getContext(), itemToCancel);
                     }
 
-
                     TodayReminderStatus localStatus = statusMap.get(medication.getId_medicamento());
                     if (localStatus != null) {
                         localStatus.setEstado("completado");
                     }
 
-
                     int currentPageIndex = viewPagerMedications.getCurrentItem();
-
-
                     Fragment visibleFragment = getChildFragmentManager().findFragmentByTag("f" + currentPageIndex);
 
                     if (visibleFragment instanceof MedicationPageFragment) {
                         Log.d(TAG, "Refrescando el fragmento hijo visible (Página " + currentPageIndex + ")");
                         ((MedicationPageFragment) visibleFragment).notifyDataChanged();
                     } else {
-
                         Log.w(TAG, "No se pudo encontrar el fragmento hijo por tag, usando notifyDataSetChanged() como fallback.");
                         pagerAdapter.notifyDataSetChanged();
                     }
@@ -198,31 +333,38 @@ public class PerfilFragment extends Fragment implements OnMedicationTakeListener
         public int getIdRecordatorio() { return fakeId; }
     }
 
-    private void setupGoalBars(View view) {
-        View goalSodio = view.findViewById(R.id.goal_sodio);
-        View goalPotasio = view.findViewById(R.id.goal_potasio);
-        View goalFosforo = view.findViewById(R.id.goal_fosforo);
-        View goalPeso = view.findViewById(R.id.goal_peso);
+    // --- ¡CAMBIO! NUEVO MÉTODO PARA MOSTRAR MENÚ ---
+    private void mostrarMenuCerrarSesion(View v) {
+        // Asegúrate de usar androidx.appcompat.widget.PopupMenu
+        PopupMenu popup = new PopupMenu(requireContext(), v);
 
-        if (goalSodio != null) {
-            ((TextView) goalSodio.findViewById(R.id.tv_goal_label)).setText("Límite de Sodio");
-            ((TextView) goalSodio.findViewById(R.id.tv_goal_value)).setText("Máx. 2,000 mg");
-            ((ProgressBar) goalSodio.findViewById(R.id.progress_goal)).setProgress(80);
-        }
-        if (goalPotasio != null) {
-            ((TextView) goalPotasio.findViewById(R.id.tv_goal_label)).setText("Límite de Potasio");
-            ((TextView) goalPotasio.findViewById(R.id.tv_goal_value)).setText("Máx. 2,500 mg");
-            ((ProgressBar) goalPotasio.findViewById(R.id.progress_goal)).setProgress(60);
-        }
-        if (goalFosforo != null) {
-            ((TextView) goalFosforo.findViewById(R.id.tv_goal_label)).setText("Límite de Fósforo");
-            ((TextView) goalFosforo.findViewById(R.id.tv_goal_value)).setText("Máx. 1,000 mg");
-            ((ProgressBar) goalFosforo.findViewById(R.id.progress_goal)).setProgress(75);
-        }
-        if (goalPeso != null) {
-            ((TextView) goalPeso.findViewById(R.id.tv_goal_label)).setText("Peso Seco");
-            ((TextView) goalPeso.findViewById(R.id.tv_goal_value)).setText("68 kg");
-            ((ProgressBar) goalPeso.findViewById(R.id.progress_goal)).setProgress(90);
-        }
+        // Añade la opción de "Cerrar Sesión" al menú
+        popup.getMenu().add("Cerrar Sesión");
+
+        // Configura el listener para el clic
+        popup.setOnMenuItemClickListener(item -> {
+            if (item.getTitle().equals("Cerrar Sesión")) {
+                // Borrar todos los datos guardados en SharedPreferences
+                SharedPreferences prefs = requireActivity().getSharedPreferences(LoginActivity.PREFS_NAME, Context.MODE_PRIVATE);
+                prefs.edit().clear().apply();
+
+                // Crear un Intent para volver a LoginActivity
+                Intent intent = new Intent(requireActivity(), LoginActivity.class);
+
+                // Limpiar la pila de actividades:
+                // Cierra MainActivity y todas las actividades anteriores.
+                // Inicia LoginActivity como una nueva tarea.
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+
+                // Finalizar la MainActivity (y este fragmento)
+                requireActivity().finish();
+                return true;
+            }
+            return false;
+        });
+
+        // Mostrar el menú
+        popup.show();
     }
 }
