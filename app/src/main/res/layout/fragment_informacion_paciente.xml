@@ -1,0 +1,33 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:padding="16dp">
+        <EditText android:id="@+id/etNombre" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:hint="Nombre" android:layout_marginBottom="8dp" android:enabled="false" />
+        <EditText android:id="@+id/etDui" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:hint="DUI" android:layout_marginBottom="8dp" android:enabled="false" />
+        <EditText android:id="@+id/etFechaNacimiento" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:hint="Fecha" android:layout_marginBottom="8dp" android:enabled="false" />
+        <EditText android:id="@+id/etGenero" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:hint="Género" android:layout_marginBottom="8dp" android:enabled="false" />
+        <EditText android:id="@+id/etTratamiento" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:hint="Tratamiento" android:layout_marginBottom="8dp" android:enabled="false" />
+        <EditText android:id="@+id/etPeso" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:hint="Peso" android:layout_marginBottom="8dp" android:enabled="false" />
+        <EditText android:id="@+id/etCreatinina" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:hint="Creatinina" android:layout_marginBottom="8dp" android:enabled="false" />
+        <EditText android:id="@+id/etSintomas" android:layout_width="match_parent" android:layout_height="100dp"
+            android:hint="Síntomas" android:layout_marginBottom="8dp" android:enabled="false" />
+        <EditText android:id="@+id/etObservaciones" android:layout_width="match_parent" android:layout_height="100dp"
+            android:hint="Observaciones" android:layout_marginBottom="8dp" android:enabled="false" />
+        <EditText android:id="@+id/etTelefono" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:hint="Teléfono" android:layout_marginBottom="8dp" android:enabled="false" />
+        <EditText android:id="@+id/etContacto" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:hint="Contacto" android:layout_marginBottom="16dp" android:enabled="false" />
+        <Button android:id="@+id/btnEditar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Editar" />
+        <Button android:id="@+id/btnGuardar" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="Guardar" android:visibility="gone" android:layout_marginTop="8dp" />
+        <ProgressBar android:id="@+id/progressBar" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:visibility="gone" android:layout_marginTop="16dp" />
+    </LinearLayout>
+</ScrollView>

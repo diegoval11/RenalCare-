@@ -1,0 +1,11 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:orientation="vertical" android:padding="16dp">
+    <EditText android:id="@+id/etTitulo" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:hint="Título" android:layout_marginBottom="8dp" />
+    <EditText android:id="@+id/etDesc" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:hint="Descripción" android:layout_marginBottom="8dp" />
+    <EditText android:id="@+id/etFecha" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:hint="Fecha y hora" android:inputType="datetime" android:layout_marginBottom="8dp" />
+    <Spinner android:id="@+id/spTipo" android:layout_width="match_parent" android:layout_height="wrap_content" />
+</LinearLayout>

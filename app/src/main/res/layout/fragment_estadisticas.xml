@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+        <TextView android:id="@+id/tv1" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:textSize="18sp" android:textStyle="bold" android:layout_marginBottom="16dp" />
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="16dp">
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                android:orientation="vertical" android:background="@drawable/bg_card_paciente" android:padding="12dp" android:layout_marginEnd="8dp">
+                <TextView android:id="@+id/tv2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textStyle="bold" />
+            </LinearLayout>
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                android:orientation="vertical" android:background="@drawable/bg_card_paciente" android:padding="12dp">
+                <TextView android:id="@+id/tv3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+        <TextView android:id="@+id/tv4" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp" android:textSize="14sp" />
+        <TextView android:id="@+id/tv5" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp" android:textSize="14sp" />
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="Historial" android:textStyle="bold" android:layout_marginBottom="8dp" />
+        <androidx.recyclerview.widget.RecyclerView android:id="@+id/rv"
+            android:layout_width="match_parent" android:layout_height="300dp" />
+    </LinearLayout>
+</ScrollView>

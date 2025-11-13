@@ -27,7 +27,7 @@ import itca.soft.renalcare.R;
 public class SignupCaregiverActivity extends AppCompatActivity {
 
     // URL de tu Web Service
-    private static final String URL_REGISTRO = "http://192.168.1.12/wsrenalcare/signup_caregiver.php";
+    private static final String URL_REGISTRO = "http://192.168.1.163/wsrenalcare/signup_caregiver.php";
 
     // Declarar todos los componentes de la UI
     private CircleImageView imgProfile;

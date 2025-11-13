@@ -1,0 +1,12 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:orientation="vertical" android:padding="16dp">
+    <EditText android:id="@+id/etSistolica" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:hint="Presión Sistólica" android:inputType="number" android:layout_marginBottom="8dp" />
+    <EditText android:id="@+id/etDiastolica" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:hint="Presión Diastólica" android:inputType="number" android:layout_marginBottom="8dp" />
+    <EditText android:id="@+id/etFC" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:hint="Frecuencia Cardíaca" android:inputType="number" android:layout_marginBottom="8dp" />
+    <EditText android:id="@+id/etPeso" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:hint="Peso" android:inputType="numberDecimal" />
+</LinearLayout>

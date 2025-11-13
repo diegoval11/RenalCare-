@@ -88,11 +88,11 @@
             android:enabled="true"
             android:exported="false" />
 
-
-
+        <!-- Actividades de Gestión de Pacientes del Doctor -->
         <activity
-            android:name=".auth.LoginActivity"
+            android:name="itca.soft.renalcare.ui.doctores.GestionPacientesDoctorActivity"
             android:exported="true"
+            android:label="Gestión de Pacientes"
             android:theme="@style/Theme.RenalCare">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -100,7 +100,22 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name="itca.soft.renalcare.ui.doctores.CrearPacienteDoctorActivity"
+            android:exported="false"
+            android:label="Crear Paciente"
+            android:theme="@style/Theme.RenalCare" />
 
+        <activity
+            android:name="itca.soft.renalcare.ui.doctores.EditarPacienteDoctorActivity"
+            android:exported="false"
+            android:label="Editar Paciente"
+            android:theme="@style/Theme.RenalCare" />
+
+        <activity
+            android:name=".auth.LoginActivity"
+            android:exported="false"
+            android:theme="@style/Theme.RenalCare" />
 
         <activity
             android:name=".auth.RoleSelectionActivity"
@@ -115,14 +130,14 @@
             android:exported="false"
             android:theme="@style/Theme.RenalCare" />
 
-       <activity
+        <activity
             android:name=".MainActivity"
-            android:exported="true"
+            android:exported="false"
             android:label="@string/app_name"
-            android:theme="@style/Theme.RenalCare">
-            <!-- If this activity can be launched from an intent, it needs an intent-filter.
-                 If not, consider setting android:exported="false". -->
-        </activity>
+            android:theme="@style/Theme.RenalCare" />
+
+
+        <activity android:name="itca.soft.renalcare.ui.doctores.DetallesPacienteDoctorActivity" android:exported="false" />
 
     </application>
 
