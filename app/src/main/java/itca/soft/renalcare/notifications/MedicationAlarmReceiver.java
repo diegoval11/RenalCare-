@@ -10,7 +10,7 @@ import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import androidx.core.app.NotificationCompat;
-import itca.soft.renalcare.MainActivity;
+import itca.soft.renalcare.PacienteActivity;
 import itca.soft.renalcare.R;
 
 public class MedicationAlarmReceiver extends BroadcastReceiver {
@@ -27,7 +27,7 @@ public class MedicationAlarmReceiver extends BroadcastReceiver {
         String medDose = intent.getStringExtra(EXTRA_MED_DOSE);
         int notificationId = intent.getIntExtra(EXTRA_NOTIFICATION_ID, 0);
 
-        Intent mainIntent = new Intent(context, MainActivity.class);
+        Intent mainIntent = new Intent(context, PacienteActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(
                 context,
                 notificationId,
