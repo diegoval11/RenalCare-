@@ -1,16 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<!--
+Este es el layout actualizado para DoctorActivity.
+Contiene los IDs que el archivo DoctorActivity.java espera.
+-->
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:padding="16dp"
-    android:gravity="center">
+    tools:context=".DoctorActivity">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Dashboard Doctor (Próximamente)"
-        android:textSize="20sp"
+        android:text="Dashboard Doctor"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="24dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
-</RelativeLayout>
+    <!-- Sección para asignar un nuevo paciente -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Asignar Nuevo Paciente"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <!-- Este es el campo de texto que usa el Java -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etDuiPaciente"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ingresar DUI del Paciente"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Este es el botón que usa el Java -->
+    <Button
+        android:id="@+id/btnAsignarPaciente"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Asignar Paciente" />
+
+    <!-- ¡NUEVO! TextView de Feedback para el Doctor -->
+    <TextView
+        android:id="@+id/tvFeedbackAsignacionDoctor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text=""
+        android:textSize="16sp"
+        android:gravity="center"
+        android:visibility="gone"
+        tools:visibility="visible"
+        tools:text="Paciente 'Juan Pérez' asignado." />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp"/>
+
+    <!-- Placeholder para la futura lista de pacientes -->
+    <TextView
+        android:id="@+id/tvMisPacientes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mis Pacientes (Próximamente)"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+</LinearLayout>
