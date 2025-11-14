@@ -2,22 +2,57 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Network and device hardware permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.VIBRATE" />
+
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <!--
+      It's good practice to declare hardware features.
+      android:required="false" means the app can be installed
+      even if the device doesn't have a camera or microphone.
+    -->
     <uses-feature android:name="android.hardware.camera" android:required="false" />
     <uses-feature android:name="android.hardware.microphone" android:required="false" />
+
+    <!--
+      Permissions for Android 13 (API 33) and above.
+      These are the granular media permissions that replace READ_EXTERNAL_STORAGE.
+    -->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <!-- Add READ_MEDIA_VIDEO if you also need to access videos -->
+    <!-- <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" /> -->
+
+    <!--
+      Permission for older devices (Android 12L / API 32 and below).
+      The maxSdkVersion attribute ensures this permission is only requested on older versions
+      where the granular media permissions are not available.
+    -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
+
+    <!--
+      The WRITE_EXTERNAL_STORAGE permission is no longer needed for most apps
+      targeting modern Android versions due to Scoped Storage.
+      Only keep this if you have a specific legacy need and understand its limitations.
+      The maxSdkVersion="28" correctly limits it to very old APIs.
+    -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28"
         tools:ignore="ScopedStorage" />
+
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <uses-feature android:name="android.hardware.microphone" android:required="false" />
+
+
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -53,10 +88,11 @@
             android:enabled="true"
             android:exported="false" />
 
-
+        <!-- Actividades de Gestión de Pacientes del Doctor -->
         <activity
-            android:name=".auth.LoginActivity"
+            android:name="itca.soft.renalcare.ui.doctores.GestionPacientesDoctorActivity"
             android:exported="true"
+            android:label="Gestión de Pacientes"
             android:theme="@style/Theme.RenalCare">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -64,6 +100,22 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name="itca.soft.renalcare.ui.doctores.CrearPacienteDoctorActivity"
+            android:exported="false"
+            android:label="Crear Paciente"
+            android:theme="@style/Theme.RenalCare" />
+
+        <activity
+            android:name="itca.soft.renalcare.ui.doctores.EditarPacienteDoctorActivity"
+            android:exported="false"
+            android:label="Editar Paciente"
+            android:theme="@style/Theme.RenalCare" />
+
+        <activity
+            android:name=".auth.LoginActivity"
+            android:exported="false"
+            android:theme="@style/Theme.RenalCare" />
 
         <activity
             android:name=".auth.RoleSelectionActivity"
@@ -78,25 +130,14 @@
             android:exported="false"
             android:theme="@style/Theme.RenalCare" />
 
-
         <activity
-            android:name=".PacienteActivity"
+            android:name=".MainActivity"
             android:exported="false"
             android:label="@string/app_name"
             android:theme="@style/Theme.RenalCare" />
 
 
-        <activity
-            android:name=".DoctorActivity"
-            android:exported="false"
-            android:label="Dashboard Doctor"
-            android:theme="@style/Theme.RenalCare" />
-
-        <activity
-            android:name=".CuidadorActivity"
-            android:exported="false"
-            android:label="Dashboard Cuidador"
-            android:theme="@style/Theme.RenalCare" />
+        <activity android:name="itca.soft.renalcare.ui.doctores.DetallesPacienteDoctorActivity" android:exported="false" />
 
     </application>
 

@@ -105,5 +105,26 @@
     <string name="confirmar_y_registrar">Presiona \'Confirmar y Registrar\' si todo es correcto.</string>
     <string name="step5_revisa_tus_datos">Paso 5: Revisa tus Datos</string>
 
+    <string-array name="tipo_tratamiento_array">
+        <item>Seleccionar tratamiento</item>
+        <item>diálisis</item>
+        <item>hemodiálisis</item>
+        <item>trasplante</item>
+        <item>otro</item>
+    </string-array>
+
+    <string-array name="genero_array">
+        <item>Seleccionar género</item>
+        <item>masculino</item>
+        <item>femenino</item>
+        <item>otro</item>
+    </string-array>
+
+    <string-array name="tipo_recordatorio">
+        <item>medicina</item>
+        <item>diálisis</item>
+        <item>cita</item>
+        <item>otro</item>
+    </string-array>
 
 </resources>

@@ -1,0 +1,10 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:orientation="vertical" android:padding="16dp">
+    <EditText android:id="@+id/etTipo" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:hint="Tipo (peritoneal/hemodiálisis)" android:layout_marginBottom="8dp" />
+    <EditText android:id="@+id/etFecha" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:hint="Fecha" android:inputType="date" android:layout_marginBottom="8dp" />
+    <EditText android:id="@+id/etHora" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:hint="Hora" android:inputType="time" />
+</LinearLayout>
