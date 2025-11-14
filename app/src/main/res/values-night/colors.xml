@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Colores específicos para modo nocturno -->
+    <color name="text_primary_night">#E8E8E8</color>
+    <color name="text_secondary_night">#A0A0A0</color>
+    <color name="icon_tint_night">#E0E0E0</color>
+    
+    <!-- Sobrescribir colores problemáticos para modo nocturno -->
+    <color name="black">#E8E8E8</color>
+    <color name="renal_dark_gray">#D0D0D0</color>
+    <color name="renal_medium_gray">#A8A8A8</color>
+    
+    <!-- Colores mejorados para mejor legibilidad - estilo pacientes -->
+    <color name="white">#1E1E1E</color>
+    <color name="renal_light_cream">#121212</color>
+    
+    <!-- Mantener colores originales de pacientes para consistencia -->
+    <color name="renal_dark_green">#5A6159</color>
+    <color name="renal_blue_gray">#6E8186</color>
+    <color name="primary_color">#5A6159</color>
+</resources>

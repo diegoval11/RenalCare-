@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_doctor"
+    app:startDestination="@id/nav_dashboard_doctor">
+
+    <fragment
+        android:id="@+id/nav_dashboard_doctor"
+        android:name="itca.soft.renalcare.ui.doctores.DashboardDoctorFragment"
+        android:label="Dashboard"
+        tools:layout="@layout/fragment_dashboard_doctor" />
+
+    <fragment
+        android:id="@+id/nav_pacientes_doctor"
+        android:name="itca.soft.renalcare.ui.doctores.PacientesDoctorFragment"
+        android:label="Pacientes"
+        tools:layout="@layout/fragment_pacientes_doctor" />
+
+    <fragment
+        android:id="@+id/nav_estadisticas_doctor"
+        android:name="itca.soft.renalcare.ui.doctores.EstadisticasDoctorFragment"
+        android:label="Estadísticas"
+        tools:layout="@layout/fragment_estadisticas_doctor" />
+
+    <fragment
+        android:id="@+id/nav_perfil_doctor"
+        android:name="itca.soft.renalcare.ui.doctores.PerfilDoctorFragment"
+        android:label="Perfil"
+        tools:layout="@layout/fragment_perfil_doctor" />
+
+</navigation>

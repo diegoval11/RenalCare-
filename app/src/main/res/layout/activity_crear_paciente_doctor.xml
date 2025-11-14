@@ -15,6 +15,7 @@
             android:text="Crear Nuevo Paciente"
             android:textSize="24sp"
             android:textStyle="bold"
+            android:textColor="?android:attr/textColorPrimary"
             android:layout_marginBottom="16dp" />
 
         <!-- Datos de usuario -->
@@ -24,6 +25,7 @@
             android:text="Datos de Acceso"
             android:textSize="16sp"
             android:textStyle="bold"
+            android:textColor="?android:attr/textColorPrimary"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="8dp" />
 
@@ -32,6 +34,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Nombre completo"
+            android:textColor="?android:attr/textColorPrimary"
+            android:backgroundTint="?android:attr/editTextBackground"
             android:layout_marginBottom="12dp" />
 
         <EditText
@@ -48,6 +52,8 @@
             android:layout_height="wrap_content"
             android:hint="Contraseña"
             android:inputType="textPassword"
+            android:textColor="?android:attr/textColorPrimary"
+            android:backgroundTint="?android:attr/editTextBackground"
             android:layout_marginBottom="16dp" />
 
         <!-- Datos médicos -->
@@ -57,6 +63,7 @@
             android:text="Información Médica"
             android:textSize="16sp"
             android:textStyle="bold"
+            android:textColor="?android:attr/textColorPrimary"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="8dp" />
 
@@ -66,6 +73,8 @@
             android:layout_height="wrap_content"
             android:hint="Fecha de nacimiento (YYYY-MM-DD)"
             android:inputType="date"
+            android:textColor="?android:attr/textColorPrimary"
+            android:backgroundTint="?android:attr/editTextBackground"
             android:layout_marginBottom="12dp" />
 
         <Spinner
@@ -86,6 +95,8 @@
             android:layout_height="wrap_content"
             android:hint="Peso (kg)"
             android:inputType="numberDecimal"
+            android:textColor="?android:attr/textColorPrimary"
+            android:backgroundTint="?android:attr/editTextBackground"
             android:layout_marginBottom="12dp" />
 
         <EditText
@@ -94,6 +105,8 @@
             android:layout_height="wrap_content"
             android:hint="Nivel de creatinina"
             android:inputType="numberDecimal"
+            android:textColor="?android:attr/textColorPrimary"
+            android:backgroundTint="?android:attr/editTextBackground"
             android:layout_marginBottom="12dp" />
 
         <EditText
@@ -102,6 +115,8 @@
             android:layout_height="100dp"
             android:hint="Síntomas"
             android:gravity="top"
+            android:textColor="?android:attr/textColorPrimary"
+            android:backgroundTint="?android:attr/editTextBackground"
             android:layout_marginBottom="12dp" />
 
         <EditText
@@ -110,6 +125,8 @@
             android:layout_height="100dp"
             android:hint="Observaciones"
             android:gravity="top"
+            android:textColor="?android:attr/textColorPrimary"
+            android:backgroundTint="?android:attr/editTextBackground"
             android:layout_marginBottom="16dp" />
 
         <!-- Contacto de emergencia -->
@@ -119,6 +136,7 @@
             android:text="Contacto de Emergencia"
             android:textSize="16sp"
             android:textStyle="bold"
+            android:textColor="?android:attr/textColorPrimary"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="8dp" />
 

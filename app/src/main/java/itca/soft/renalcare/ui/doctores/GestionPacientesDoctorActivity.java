@@ -7,6 +7,7 @@ import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import itca.soft.renalcare.R;
 import itca.soft.renalcare.adapters.PacienteDoctorAdapter;
 import itca.soft.renalcare.data.models.PacienteDoctor;
@@ -26,9 +27,10 @@ public class GestionPacientesDoctorActivity extends AppCompatActivity {
     private List<PacienteDoctor> pacientes;
     private ApiServiceDoctor apiService;
     private int id_doctor;
-    private Button btnCrearPaciente;
+    private FloatingActionButton btnCrearPaciente;
     private ProgressBar progressBar;
     private EditText etBuscar;
+    private TextView tvTotalPacientes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +51,7 @@ public class GestionPacientesDoctorActivity extends AppCompatActivity {
         btnCrearPaciente = findViewById(R.id.btnCrearPaciente);
         progressBar = findViewById(R.id.progressBar);
         etBuscar = findViewById(R.id.etBuscar);
+        tvTotalPacientes = findViewById(R.id.tvTotalPacientes);
 
         recyclerViewPacientes.setLayoutManager(new LinearLayoutManager(this));
         pacientes = new ArrayList<>();
@@ -90,6 +93,11 @@ public class GestionPacientesDoctorActivity extends AppCompatActivity {
                     pacientes.clear();
                     pacientes.addAll(response.body());
                     adapter.notifyDataSetChanged();
+                    
+                    // Actualizar contador de pacientes
+                    if (tvTotalPacientes != null) {
+                        tvTotalPacientes.setText(String.valueOf(pacientes.size()));
+                    }
                 }
             }
 

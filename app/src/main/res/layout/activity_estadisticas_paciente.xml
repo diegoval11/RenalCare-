@@ -15,6 +15,7 @@
             android:text="Estadísticas del Paciente"
             android:textSize="24sp"
             android:textStyle="bold"
+            android:textColor="?android:attr/textColorPrimary"
             android:layout_marginBottom="16dp" />
 
         <!-- Información del paciente -->
@@ -22,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@drawable/bg_card_paciente"
+            android:background="?android:attr/selectableItemBackground"
             android:padding="12dp"
             android:layout_marginBottom="16dp">
 
@@ -33,6 +34,7 @@
                 android:text="Nombre Paciente"
                 android:textSize="18sp"
                 android:textStyle="bold"
+                android:textColor="?android:attr/textColorPrimary"
                 android:layout_marginBottom="8dp" />
 
             <TextView
@@ -41,6 +43,7 @@
                 android:layout_height="wrap_content"
                 android:text="Tratamiento: diálisis"
                 android:textSize="14sp"
+                android:textColor="?android:attr/textColorSecondary"
                 android:layout_marginBottom="4dp" />
 
             <TextView
@@ -49,6 +52,7 @@
                 android:layout_height="wrap_content"
                 android:text="Peso actual: 70 kg"
                 android:textSize="14sp"
+                android:textColor="?android:attr/textColorSecondary"
                 android:layout_marginBottom="4dp" />
 
             <TextView
@@ -56,7 +60,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Creatinina: 1.5"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:textColor="?android:attr/textColorSecondary" />
 
         </LinearLayout>
 
@@ -81,7 +86,8 @@
                     android:layout_height="wrap_content"
                     android:text="Sesiones Diálisis"
                     android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textColor="?android:attr/textColorSecondary" />
 
                 <TextView
                     android:id="@+id/tvTotalDialisis"
@@ -107,7 +113,8 @@
                     android:layout_height="wrap_content"
                     android:text="Medicamentos"
                     android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textColor="?android:attr/textColorSecondary" />
 
                 <TextView
                     android:id="@+id/tvTotalMedicamentos"
@@ -129,6 +136,7 @@
             android:text="Promedios (últimos 30 días)"
             android:textSize="16sp"
             android:textStyle="bold"
+            android:textColor="?android:attr/textColorPrimary"
             android:layout_marginBottom="8dp" />
 
         <LinearLayout
@@ -145,6 +153,7 @@
                 android:layout_height="wrap_content"
                 android:text="Presión sistólica: --"
                 android:textSize="14sp"
+                android:textColor="?android:attr/textColorSecondary"
                 android:layout_marginBottom="8dp" />
 
             <TextView
@@ -153,6 +162,7 @@
                 android:layout_height="wrap_content"
                 android:text="Presión diastólica: --"
                 android:textSize="14sp"
+                android:textColor="?android:attr/textColorSecondary"
                 android:layout_marginBottom="8dp" />
 
             <TextView
@@ -161,6 +171,7 @@
                 android:layout_height="wrap_content"
                 android:text="Frecuencia cardíaca: --"
                 android:textSize="14sp"
+                android:textColor="?android:attr/textColorSecondary"
                 android:layout_marginBottom="8dp" />
 
             <TextView
@@ -168,7 +179,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Peso promedio: --"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:textColor="?android:attr/textColorSecondary" />
 
         </LinearLayout>
 
@@ -179,6 +191,7 @@
             android:text="Historial de Signos Vitales"
             android:textSize="16sp"
             android:textStyle="bold"
+            android:textColor="?android:attr/textColorPrimary"
             android:layout_marginBottom="8dp" />
 
         <androidx.recyclerview.widget.RecyclerView

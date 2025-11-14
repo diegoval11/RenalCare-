@@ -1,85 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-Este es el layout actualizado para DoctorActivity.
-Contiene los IDs que el archivo DoctorActivity.java espera.
--->
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
     tools:context=".DoctorActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Dashboard Doctor"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="24dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/renal_dark_green"
+        app:title="RenalCare+ Doctor"
+        app:titleTextColor="@color/white"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Sección para asignar un nuevo paciente -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Asignar Nuevo Paciente"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/nav_host_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:navGraph="@navigation/nav_graph_doctor" />
 
-    <!-- Este es el campo de texto que usa el Java -->
-    <com.google.android.material.textfield.TextInputLayout
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        android:background="@color/renal_dark_green"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/bottom_nav_menu_doctor"
+        app:itemTextColor="@color/bottom_nav_colors"
+        app:itemIconTint="@color/bottom_nav_colors" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etDuiPaciente"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Ingresar DUI del Paciente"
-            android:inputType="text" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <!-- Este es el botón que usa el Java -->
-    <Button
-        android:id="@+id/btnAsignarPaciente"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Asignar Paciente" />
-
-    <!-- ¡NUEVO! TextView de Feedback para el Doctor -->
-    <TextView
-        android:id="@+id/tvFeedbackAsignacionDoctor"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text=""
-        android:textSize="16sp"
-        android:gravity="center"
-        android:visibility="gone"
-        tools:visibility="visible"
-        tools:text="Paciente 'Juan Pérez' asignado." />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?android:attr/listDivider"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="24dp"/>
-
-    <!-- Placeholder para la futura lista de pacientes -->
-    <TextView
-        android:id="@+id/tvMisPacientes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Mis Pacientes (Próximamente)"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
