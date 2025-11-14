@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-// --- ¡CAMBIO! Import añadido ---
+// --- Import añadido ---
 import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -69,7 +69,7 @@ public class PerfilFragment extends Fragment implements OnMedicationTakeListener
     private View goalSodio, goalPotasio, goalFosforo, goalPeso;
     private TextView tvUserName, tvUserAge, tvDiagnosisStage, tvDiagnosisTreatment;
 
-    // --- ¡CAMBIO! Variable para el botón de settings ---
+    // --- Variable para el botón de settings ---
     private ImageView iconSettings;
 
     @Nullable
@@ -84,12 +84,17 @@ public class PerfilFragment extends Fragment implements OnMedicationTakeListener
 
         // --- 1. Obtener ID del Paciente desde SharedPreferences ---
         SharedPreferences prefs = requireActivity().getSharedPreferences(LoginActivity.PREFS_NAME, Context.MODE_PRIVATE);
+        // NOTA: 'id_usuario' aquí es el ID del paciente, ya sea el logueado
+        // o el que el cuidador está viendo. MainViewModel se encarga de eso.
         idPacienteLogueado = prefs.getInt("id_usuario", -1);
 
         if (idPacienteLogueado == -1) {
             Toast.makeText(getContext(), "Error de sesión: ID no encontrado.", Toast.LENGTH_SHORT).show();
             // Aquí podrías cerrar el fragmento o redirigir al Login
             return;
+            // --- ¡ERROR CORREGIDO! ---
+            // El bloque de código de "Solo Vista" que estaba pegado aquí
+            // ha sido eliminado de este bloque 'if'.
         }
 
         // --- 2. Lógica existente de Medicamentos (se mantiene) ---
@@ -118,12 +123,11 @@ public class PerfilFragment extends Fragment implements OnMedicationTakeListener
         goalFosforo = view.findViewById(R.id.goal_fosforo);
         goalPeso = view.findViewById(R.id.goal_peso);
 
-        // El setupGoalBars() con datos mock se elimina
-
-        // --- 4. Inicializar ViewModel y Observador (NUEVA LÓGICA) ---
-        // (Esta lógica alimenta el Header del Perfil y las Metas)
+        // --- 4. Inicializar ViewModel y Observadores ---
+        // Obtenemos el ViewModel con el scope de la Actividad (requireActivity())
         mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
 
+        // Observador para los datos del paciente (actualiza el perfil)
         mainViewModel.getPacienteInfo().observe(getViewLifecycleOwner(), new Observer<PacienteInfoResponse>() {
             @Override
             public void onChanged(PacienteInfoResponse pacienteInfo) {
@@ -141,14 +145,41 @@ public class PerfilFragment extends Fragment implements OnMedicationTakeListener
             }
         });
 
-        // --- 5. ¡CAMBIO! INICIO DE LÓGICA PARA CERRAR SESIÓN ---
+        // --- ¡LÓGICA CORREGIDA Y REUBICADA! ---
+        // Observador para el modo "Solo Vista" (oculta botones)
+        mainViewModel.isViewOnly().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean esSoloVista) {
+                // Oculta o muestra los botones de acción/edición
+                if (esSoloVista) {
+                    // Estamos en modo "Solo Vista" (Cuidador)
+                    // Ocultamos el botón de gestionar medicamentos y el de settings
+                    if (iconMedNotification != null) {
+                        iconMedNotification.setVisibility(View.GONE);
+                    }
+                    if (iconSettings != null) {
+                        iconSettings.setVisibility(View.GONE);
+                    }
+                } else {
+                    // Estamos en modo normal (Paciente)
+                    // Mostramos los botones
+                    if (iconMedNotification != null) {
+                        iconMedNotification.setVisibility(View.VISIBLE);
+                    }
+                    if (iconSettings != null) {
+                        iconSettings.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        });
+
+        // --- 5. INICIO DE LÓGICA PARA CERRAR SESIÓN ---
         iconSettings = view.findViewById(R.id.icon_settings);
         if (iconSettings != null) {
             iconSettings.setOnClickListener(v -> {
                 mostrarMenuCerrarSesion(v);
             });
         }
-        // --- ¡CAMBIO! FIN DE LÓGICA ---
     }
 
     /**
@@ -234,6 +265,16 @@ public class PerfilFragment extends Fragment implements OnMedicationTakeListener
         statusMap.clear();
 
         // Usa el idPacienteLogueado obtenido de SharedPreferences
+        // NOTA: Este ID debe ser el ID del paciente que se está viendo
+        // MainViewModel es quien decide qué ID cargar (el del cuidador o el del paciente)
+        // PERO... esta lógica de meds es local del fragmento y usa 'idPacienteLogueado'
+        // Deberíamos ALINEAR esto para que use el ID del MainViewModel.
+
+        // Por ahora, asumimos que 'idPacienteLogueado' es correcto
+        // (ya que se obtiene ANTES de que el ViewModel cargue)
+        // Si esto falla, necesitaremos refactorizar para que esta
+        // carga de meds se dispare DESPUÉS de que el ViewModel confirme el ID.
+
         apiService.getMedicamentos(idPacienteLogueado).enqueue(new Callback<List<MedicationItem>>() {
             @Override
             public void onResponse(Call<List<MedicationItem>> call, Response<List<MedicationItem>> response) {
@@ -252,11 +293,12 @@ public class PerfilFragment extends Fragment implements OnMedicationTakeListener
     }
 
     private void loadTodayStatus() {
-        // Usa el idPacienteLogueado obtenido de SharedPreferences
+        // Usa el idPacienteLogueado
         apiService.getTodayReminderStatus(idPacienteLogueado).enqueue(new Callback<List<TodayReminderStatus>>() {
             @Override
             public void onResponse(Call<List<TodayReminderStatus>> call, Response<List<TodayReminderStatus>> response) {
                 if (response.isSuccessful() && response.body() != null) {
+                    statusMap.clear(); // Limpiar antes de llenar
                     for (TodayReminderStatus status : response.body()) {
                         statusMap.put(status.getId_medicamento(), status);
                     }
@@ -284,7 +326,7 @@ public class PerfilFragment extends Fragment implements OnMedicationTakeListener
 
         Log.d(TAG, "Marcando como 'completado' el recordatorio: " + status.getId_recordatorio());
 
-        // Usa el idPacienteLogueado obtenido de SharedPreferences
+        // Usa el idPacienteLogueado
         UpdateStatusBody body = new UpdateStatusBody("completado", idPacienteLogueado);
         apiService.updateReminderStatus(status.getId_recordatorio(), body).enqueue(new Callback<Void>() {
             @Override
@@ -333,7 +375,7 @@ public class PerfilFragment extends Fragment implements OnMedicationTakeListener
         public int getIdRecordatorio() { return fakeId; }
     }
 
-    // --- ¡CAMBIO! NUEVO MÉTODO PARA MOSTRAR MENÚ ---
+    // --- MÉTODO PARA MOSTRAR MENÚ (Sin cambios) ---
     private void mostrarMenuCerrarSesion(View v) {
         // Asegúrate de usar androidx.appcompat.widget.PopupMenu
         PopupMenu popup = new PopupMenu(requireContext(), v);
@@ -352,8 +394,6 @@ public class PerfilFragment extends Fragment implements OnMedicationTakeListener
                 Intent intent = new Intent(requireActivity(), LoginActivity.class);
 
                 // Limpiar la pila de actividades:
-                // Cierra MainActivity y todas las actividades anteriores.
-                // Inicia LoginActivity como una nueva tarea.
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
 

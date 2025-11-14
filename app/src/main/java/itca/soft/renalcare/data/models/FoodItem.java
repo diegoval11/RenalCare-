@@ -1,29 +1,74 @@
 package itca.soft.renalcare.data.models;
 
-public class FoodItem {
-    private String name;
-    private int potassium; // K
-    private int sodium;    // Na
-    private int phosphorus; // P
-    private String recommendation;
-    private int imageResId; // <-- 1. AÑADE LA VARIABLE AQUÍ
+import com.google.gson.annotations.SerializedName;
 
-    public FoodItem(String name, int potassium, int sodium, int phosphorus, String recommendation, int imageResId) {
-        this.name = name;
-        this.potassium = potassium;
-        this.sodium = sodium;
-        this.phosphorus = phosphorus;
-        this.recommendation = recommendation;
-        this.imageResId = imageResId; // <-- 2. ASÍGNALA EN EL CONSTRUCTOR
+public class FoodItem {
+
+    // SerializedName mapea el nombre de la columna de la BD/JSON al campo Java
+    @SerializedName("id_alimento")
+    private int id;
+
+    @SerializedName("nombre")
+    private String nombre;
+
+    // Cambiamos de int (ID de drawable) a String (URL)
+    @SerializedName("foto_url")
+    private String fotoUrl;
+
+    @SerializedName("sodio")
+    private int sodio;
+
+    @SerializedName("potasio")
+    private int potasio;
+
+    @SerializedName("fosforo")
+    private int fosforo;
+
+    @SerializedName("etiqueta")
+    private String etiqueta;
+
+    // Campos nuevos
+    @SerializedName("ingredientes")
+    private String ingredientes;
+
+    @SerializedName("receta")
+    private String receta;
+
+    // Constructor (puedes dejarlo vacío si GSON lo maneja)
+
+    // --- Getters ---
+    // (Estos son los que usará el Adapter)
+
+    public String getNombre() {
+        return nombre;
     }
 
-    // Getters
-    public String getName() { return name; }
-    public int getPotassium() { return potassium; }
-    public int getSodium() { return sodium; }
-    public int getPhosphorus() { return phosphorus; }
-    public String getRecommendation() { return recommendation; }
+    public String getFotoUrl() {
+        return fotoUrl;
+    }
 
-    // Ahora esta línea funcionará
-    public int getImageResId() { return imageResId; }
+    public int getSodio() {
+        return sodio;
+    }
+
+    public int getPotasio() {
+        return potasio;
+    }
+
+    public int getFosforo() {
+        return fosforo;
+    }
+
+    public String getEtiqueta() {
+        return etiqueta;
+    }
+
+    // Getters para los nuevos campos (por si los usas en una vista de detalle)
+    public String getIngredientes() {
+        return ingredientes;
+    }
+
+    public String getReceta() {
+        return receta;
+    }
 }

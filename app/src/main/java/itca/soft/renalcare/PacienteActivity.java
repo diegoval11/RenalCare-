@@ -1,14 +1,17 @@
 // Ubicación: PacienteActivity.java
-// (Anteriormente MainActivity.java)
 package itca.soft.renalcare;
 
 import android.content.Context;
+import android.content.Intent; // ¡NUEVO IMPORT!
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Menu; // ¡NUEVO IMPORT!
+import android.view.MenuItem; // ¡NUEVO IMPORT!
+import android.view.View; // ¡NUEVO IMPORT!
 import android.widget.Toast;
 
+import androidx.annotation.NonNull; // ¡NUEVO IMPORT!
 import androidx.appcompat.app.AppCompatActivity;
-// NO MÁS FragmentTransaction (a menos que la uses para otra cosa)
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -17,46 +20,67 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import itca.soft.renalcare.auth.LoginActivity;
-// NO MÁS imports de ChatFragment/VoiceChatFragment aquí
 import itca.soft.renalcare.ui.MainViewModel;
 
-
-// ¡CAMBIO DE NOMBRE!
 public class PacienteActivity extends AppCompatActivity {
 
+    // --- ¡NUEVO! Claves públicas para el Intent ---
+    /**
+     * Clave para el Intent que indica el ID del paciente a cargar.
+     * Usado por CuidadorActivity.
+     */
+    public static final String EXTRA_ID_PACIENTE = "itca.soft.renalcare.EXTRA_ID_PACIENTE";
+    /**
+     * Clave para el Intent (boolean) que indica si la actividad debe
+     * iniciarse en modo de solo vista.
+     */
+    public static final String EXTRA_IS_VIEW_ONLY = "itca.soft.renalcare.EXTRA_IS_VIEW_ONLY";
+    // ------------------------------------------------
+
     private MainViewModel mainViewModel;
+    private BottomNavigationView bottomNavView; // Hacemos referencia global
+    private boolean isViewOnly = false; // Flag local
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_paciente);
 
-        // ¡CAMBIO DE LAYOUT!
-        setContentView(R.layout.activity_paciente); // Infla el nuevo layout
-
-        // --- INICIO DE LÓGICA DE VIEWMODEL (Sin cambios) ---
+        // --- INICIO DE LÓGICA DE VIEWMODEL (Modificada) ---
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
-
         SharedPreferences prefs = getSharedPreferences(LoginActivity.PREFS_NAME, Context.MODE_PRIVATE);
 
-        // Usamos la clave hardcodeada que ya tenías
-        int idUsuarioLogueado = prefs.getInt("id_usuario", -1);
+        // 1. Determinar si estamos en modo "Solo Vista"
+        Intent intent = getIntent();
+        isViewOnly = intent.getBooleanExtra(EXTRA_IS_VIEW_ONLY, false);
 
-        if (idUsuarioLogueado != -1) {
-            mainViewModel.cargarDatosPaciente(idUsuarioLogueado);
+        // 2. Determinar qué ID de paciente cargar
+        int idPacienteACargar;
+        if (isViewOnly) {
+            // Si es "Solo Vista", el ID VIENE DEL INTENT
+            idPacienteACargar = intent.getIntExtra(EXTRA_ID_PACIENTE, -1);
+        } else {
+            // Si NO es "Solo Vista", es un Paciente logueado.
+            // El ID VIENE DE SHAREDPREFERENCES
+            idPacienteACargar = prefs.getInt(LoginActivity.KEY_ID_USUARIO, -1);
+        }
+
+        // 3. Cargar datos en el ViewModel
+        if (idPacienteACargar != -1) {
+            // Pasamos AMBOS datos al ViewModel
+            mainViewModel.cargarDatosPaciente(idPacienteACargar, isViewOnly);
         } else {
             Toast.makeText(this, "Error de sesión: ID no encontrado.", Toast.LENGTH_LONG).show();
         }
         // --- FIN DE LÓGICA DE VIEWMODEL ---
 
-
         // 1. Encontrar los componentes del layout
-        // (Los IDs son los mismos que definiste en activity_main.xml)
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
-        BottomNavigationView bottomNavView = findViewById(R.id.bottom_navigation_view);
+        bottomNavView = findViewById(R.id.bottom_navigation_view); // Usamos la referencia global
 
         // 2. Obtener el NavHostFragment y el NavController
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.nav_host_fragment); // ID sigue siendo el mismo
+                .findFragmentById(R.id.nav_host_fragment);
         NavController navController = navHostFragment.getNavController();
 
         // 3. Conectar la Toolbar
@@ -65,6 +89,24 @@ public class PacienteActivity extends AppCompatActivity {
 
         // 4. Conectar el BottomNavigationView
         NavigationUI.setupWithNavController(bottomNavView, navController);
+
+        // 5. ¡NUEVO! Ajustar UI para modo "Solo Vista"
+        if (isViewOnly) {
+            // Si es solo vista, deshabilitamos la navegación inferior
+            // para que el cuidador no pueda cambiar de fragmento
+            // (Opcional: podrías querer que sí navegue)
+
+            // Ejemplo 1: Deshabilitar clics en el BottomNav
+            // bottomNavView.setEnabled(false);
+
+            // Ejemplo 2: Ocultar el BottomNav
+            // bottomNavView.setVisibility(View.GONE);
+
+            // Por ahora, lo dejamos visible pero los fragmentos
+            // (ej. Perfil) reaccionarán al VM para ocultar botones.
+            // Lo que sí haremos es cambiar el título:
+            getSupportActionBar().setTitle("Viendo Perfil de Paciente");
+        }
     }
 
     // (Sin cambios)
@@ -73,4 +115,49 @@ public class PacienteActivity extends AppCompatActivity {
         NavController navController = ((NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment)).getNavController();
         return navController.navigateUp() || super.onSupportNavigateUp();
     }
+
+    /**
+     * ¡NUEVO!
+     * Infla el menú de la Toolbar (si tienes uno).
+     * Aquí es donde ocultamos el botón de "Cerrar Sesión"
+     * si estamos en modo "Solo Vista".
+     */
+
+
+
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Asumimos que tienes un menú (ej. res/menu/main_menu.xml)
+        // getMenuInflater().inflate(R.menu.main_menu, menu);
+
+        // (Si no tienes menú, esta función puede quedar vacía,
+        // pero la lógica de abajo es como lo harías)
+
+        return true; // Devuelve true para mostrar el menú
+    }
+
+    /**
+     * ¡NUEVO!
+     * Se llama justo antes de mostrar el menú.
+     * Perfecto para ocultar/mostrar items dinámicamente.
+     */
+    @Override
+    public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
+        // Asumimos que tu botón de logout tiene el id "action_logout"
+        // MenuItem itemLogout = menu.findItem(R.id.action_logout);
+
+        // if (itemLogout != null) {
+        //     // Si es "Solo Vista", oculta el botón de logout
+        //     itemLogout.setVisible(!isViewOnly);
+        // }
+
+        // (Descomenta lo anterior cuando tengas tu menú)
+
+        return super.onPrepareOptionsMenu(menu);
+    }
 }
+
+
