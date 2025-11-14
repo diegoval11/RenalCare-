@@ -2,20 +2,20 @@
 package itca.soft.renalcare;
 
 import android.content.Context;
-import android.content.Intent; // ¡NUEVO IMPORT!
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.Menu; // ¡NUEVO IMPORT!
-import android.view.MenuItem; // ¡NUEVO IMPORT!
-import android.view.View; // ¡NUEVO IMPORT!
+import android.view.Menu;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull; // ¡NUEVO IMPORT!
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
+
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -89,6 +89,18 @@ public class PacienteActivity extends AppCompatActivity {
 
         // 4. Conectar el BottomNavigationView
         NavigationUI.setupWithNavController(bottomNavView, navController);
+
+        mainViewModel.getNavigateTo().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer destinationId) {
+                if (destinationId != null) {
+                    // Cuando el ViewModel pide navegar,
+                    // le decimos al BottomNavigationView que cambie su ítem seleccionado.
+                    bottomNavView.setSelectedItemId(destinationId);
+                }
+            }
+        });
+
 
         // 5. ¡NUEVO! Ajustar UI para modo "Solo Vista"
         if (isViewOnly) {

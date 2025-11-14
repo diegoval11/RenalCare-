@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F4F6F6"
+    android:background="@color/renal_light_cream"
     tools:context=".ui.alimentos.AlimentosFragment">
 
     <LinearLayout
@@ -13,31 +13,37 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.google.android.material.card.MaterialCardView
+        <!-- ¡NUEVO! Botón para escanear comida -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_scan_food"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            app:cardElevation="4dp"
-            app:cardCornerRadius="8dp">
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="16dp"
+            android:text="Escanear mi Comida"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/renal_dark_green"
+            app:icon="@drawable/ic_camera"
+            app:iconTint="@color/white"
+            app:iconGravity="textStart"
+            app:cornerRadius="8dp"
+            android:paddingVertical="12dp" />
 
-
-
-
-
-        </com.google.android.material.card.MaterialCardView>
-
+        <!-- SearchView (Ahora con un margen superior más pequeño) -->
         <androidx.appcompat.widget.SearchView
             android:id="@+id/searchViewAlimentos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:background="@android:color/white"
+            android:background="@color/white"
             app:iconifiedByDefault="false"
             app:queryHint="Buscar alimento (ej. Manzana, Pollo...)"
+            android:theme="@style/App.SearchViewTheme"   />
 
-        android:theme="@style/App.SearchViewTheme"   />
-
+        <!-- RecyclerView -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewAlimentos"
             android:layout_width="match_parent"
@@ -48,6 +54,7 @@
 
     </LinearLayout>
 
+    <!-- ProgressBar -->
     <ProgressBar
         android:id="@+id/progressBarAlimentos"
         android:layout_width="wrap_content"
