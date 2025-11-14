@@ -45,4 +45,10 @@
     <color name="divider_color">#E8E6D4</color>
     <color name="hint_text_color">#8A8D87</color>
     <color name="disabled_text_color">#A2A999</color>
+
+
+
+    <color name="gray_dark">@color/renal_dark_gray</color>
+    <color name="gray_light">@color/renal_light_gray</color>
+
 </resources>

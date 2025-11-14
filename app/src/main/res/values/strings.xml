@@ -104,6 +104,10 @@
     <string name="_4_tratamiento">4. Tratamiento</string>
     <string name="confirmar_y_registrar">Presiona \'Confirmar y Registrar\' si todo es correcto.</string>
     <string name="step5_revisa_tus_datos">Paso 5: Revisa tus Datos</string>
+    <string name="title_perfil">Titulo del Perfil PRUEBA</string>
+    <string name="title_chat">CHAT</string>
+    <string name="title_alimentos">ALIMENTOS</string>
+    <string name="title_inicio">INICIO</string>
 
 
 </resources>

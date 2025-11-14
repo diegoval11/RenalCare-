@@ -13,9 +13,8 @@ public interface ApiService {
 
     // ========== CONVERSACIONES ==========
 
-    @GET("conversaciones/usuario/{id_usuario}")
+    @GET("api/chat/conversaciones/{id_usuario}")
     Call<JsonObject> getConversacionesPorUsuario(@Path("id_usuario") String idUsuario);
-
     @GET("conversaciones/{id_conversacion}")
     Call<JsonObject> getConversacionById(@Path("id_conversacion") String idConversacion);
 
@@ -24,8 +23,9 @@ public interface ApiService {
 
     // ========== MENSAJES ==========
 
-    @GET("conversaciones/{id_conversacion}/mensajes")
+    @GET("api/chat/mensajes/{id_conversacion}")
     Call<JsonObject> getMensajesPorConversacion(@Path("id_conversacion") String idConversacion);
+
 
     @POST("mensajes")
     Call<JsonObject> crearMensaje(@Body JsonObject mensaje);

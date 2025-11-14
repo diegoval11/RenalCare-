@@ -22,7 +22,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
@@ -30,74 +29,56 @@ android {
 }
 
 dependencies {
-    // AndroidX
+    // AndroidX (desde el catálogo libs)
     implementation libs.appcompat
     implementation libs.material
     implementation libs.activity
     implementation libs.constraintlayout
     implementation libs.navigation.fragment
     implementation libs.navigation.ui
+    implementation libs.lifecycle.viewmodel
 
-    // RecyclerView
-    implementation 'androidx.recyclerview:recyclerview:1.3.2'
+    // RecyclerView (desde el catálogo libs)
+    implementation libs.recyclerview
 
-    // Retrofit + Gson
+    // Circle Image View (¡CORREGIDO! Usando libs)
+    implementation libs.circleimageview
+
+    // AsyncHttpClient (¡CORREGIDO! Usando libs)
+    implementation libs.android.async.http
+
+    // Retrofit + Gson (Consolidadas)
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.11.0'
     implementation 'com.google.code.gson:gson:2.10.1'
 
-    // Coroutines
+    // Coroutines (Consolidadas)
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.2'
-
-    // ViewModel
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2'
     implementation 'androidx.fragment:fragment-ktx:1.6.2'
 
-    // Glide para imágenes
+    // ViewPager2
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
+
+    // Glide (Consolidadas)
     implementation 'com.github.bumptech.glide:glide:4.16.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
 
-    // WebRTC para chat de voz
+    // WebRTC
     implementation 'io.getstream:stream-webrtc-android:1.1.3'
 
-    // Material
-    implementation 'com.google.android.material:material:1.11.0'
+    // Otros (Consolidados)
     implementation 'androidx.activity:activity-ktx:1.8.2'
     implementation 'androidx.drawerlayout:drawerlayout:1.2.0'
-
-    // ⭐ Socket.IO para WebSocket (Alternativa JitPack)
     implementation 'org.json:json:20231013'
-
     implementation 'io.socket:socket.io-client:2.1.0'
-    implementation 'org.json:json:20231013'
-
 
     // Testing
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
 
-    // Socket.IO
-    implementation 'io.socket:socket.io-client:2.1.0'
-
-    // Material Design
-    implementation 'com.google.android.material:material:1.9.0'
-
-    // RecyclerView
-    implementation 'androidx.recyclerview:recyclerview:1.3.0'
-
-    // Fragment
-    implementation 'androidx.fragment:fragment:1.6.1'
-
-    // Gson (para parsear JSON)
-    implementation 'com.google.code.gson:gson:2.10.1'
-
-    // Retrofit (si usas para API REST)
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-
-    // Otros
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    // --- TODAS LAS LÍNEAS DUPLICADAS Y CONFLICTIVAS HAN SIDO ELIMINADAS ---
 }

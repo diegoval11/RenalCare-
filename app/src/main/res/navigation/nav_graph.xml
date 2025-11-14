@@ -5,47 +5,73 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/nav_inicio">
 
-    <!-- ARREGLADO: Añadido el paquete ".ui" -->
+    <!-- Destino de Inicio (Sin cambios) -->
     <fragment
         android:id="@+id/nav_inicio"
         android:name="itca.soft.renalcare.ui.inicio.InicioFragment"
         android:label="Inicio"
         tools:layout="@layout/fragment_inicio" />
 
-    <!-- ARREGLADO: Añadido el paquete ".ui" Y LA ACCIÓN DE VOZ -->
+    <!--
+      DESTINO DE CHAT (CONTENEDOR DE PESTAÑAS)
+      Este fragmento ahora contiene las pestañas.
+      Todas las acciones de navegación (a Voz y a Chat Humano)
+      deben originarse aquí.
+    -->
     <fragment
         android:id="@+id/nav_chat"
         android:name="itca.soft.renalcare.ui.chat.ChatFragment"
         android:label="Chat"
         tools:layout="@layout/fragment_chat" >
 
-        <!-- ACCIÓN AÑADIDA: Para ir al chat de voz -->
+        <!--
+          ACCIÓN 1: Navega al chat de voz
+          (ID renombrado para coincidir con AiChatFragment.java)
+        -->
         <action
-            android:id="@+id/action_chatFragment_to_voiceChatFragment"
+            android:id="@+id/action_aiChatFragment_to_voiceChatFragment"
             app:destination="@id/nav_voice_chat"/>
+
+        <!--
+          ACCIÓN 2: NUEVA ACCIÓN para ir a la sala de chat humano
+          (Llamada desde HumanChatListFragment.java)
+        -->
+        <action
+            android:id="@+id/action_chatFragment_to_humanChatRoomFragment"
+            app:destination="@id/nav_human_chat_room"/>
 
     </fragment>
 
-    <!-- Este ya estaba correcto -->
+    <!-- Destino de Alimentos (Sin cambios) -->
     <fragment
         android:id="@+id/nav_alimentos"
         android:name="itca.soft.renalcare.ui.alimentos.AlimentosFragment"
         android:label="Alimentos"
         tools:layout="@layout/fragment_alimentos" />
 
-    <!-- ARREGLADO: Añadido el paquete ".ui" -->
+    <!-- Destino de Perfil (Sin cambios) -->
     <fragment
         android:id="@+id/nav_perfil"
         android:name="itca.soft.renalcare.ui.perfil.PerfilFragment"
         android:label="Perfil"
         tools:layout="@layout/fragment_perfil" />
 
-    <!-- DESTINO AÑADIDO: El fragmento del chat de voz -->
+    <!-- Destino de Chat de Voz (Sin cambios) -->
     <fragment
         android:id="@+id/nav_voice_chat"
         android:name="itca.soft.renalcare.ui.voice.VoiceChatFragment"
         android:label="Asistente de Voz"
         tools:layout="@layout/fragment_voice_chat" />
 
+    <!--
+      NUEVO DESTINO: Sala de Chat Humano
+      Este es el fragmento que muestra los mensajes
+      de una conversación específica.
+    -->
+    <fragment
+        android:id="@+id/nav_human_chat_room"
+        android:name="itca.soft.renalcare.ui.websoket.HumanChatRoomFragment"
+        android:label="Chat"
+        tools:layout="@layout/fragment_human_chat_room" />
 
 </navigation>

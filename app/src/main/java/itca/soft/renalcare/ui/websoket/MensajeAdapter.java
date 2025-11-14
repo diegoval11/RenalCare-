@@ -53,8 +53,7 @@ public class MensajeAdapter extends RecyclerView.Adapter<MensajeAdapter.MensajeV
         int viewType = getItemViewType(position);
 
         holder.tvContenido.setText(mensaje.getContenido());
-        holder.tvHora.setText(formatearHora(mensaje.getTimestamp()));
-
+        holder.tvHora.setText(formatearHora(mensaje.getFecha_envio()));
         View spacer = holder.itemView.findViewById(R.id.spacer);
 
         if (viewType == TIPO_ENVIADO) {

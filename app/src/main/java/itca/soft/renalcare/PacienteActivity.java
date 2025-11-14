@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.widget.Toast;
 
@@ -20,6 +22,7 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import itca.soft.renalcare.auth.LoginActivity;
+import itca.soft.renalcare.data.network.WebSocketService;
 import itca.soft.renalcare.ui.MainViewModel;
 
 public class PacienteActivity extends AppCompatActivity {
@@ -41,6 +44,9 @@ public class PacienteActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavView; // Hacemos referencia global
     private boolean isViewOnly = false; // Flag local
 
+    private WebSocketService wsService;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +62,8 @@ public class PacienteActivity extends AppCompatActivity {
 
         // 2. Determinar qué ID de paciente cargar
         int idPacienteACargar;
+        String nombrePacienteLogueado = ""; // ¡NUEVO!
+
         if (isViewOnly) {
             // Si es "Solo Vista", el ID VIENE DEL INTENT
             idPacienteACargar = intent.getIntExtra(EXTRA_ID_PACIENTE, -1);
@@ -63,6 +71,8 @@ public class PacienteActivity extends AppCompatActivity {
             // Si NO es "Solo Vista", es un Paciente logueado.
             // El ID VIENE DE SHAREDPREFERENCES
             idPacienteACargar = prefs.getInt(LoginActivity.KEY_ID_USUARIO, -1);
+            nombrePacienteLogueado = prefs.getString(LoginActivity.KEY_NOMBRE_USUARIO, "Usuario");
+
         }
 
         // 3. Cargar datos en el ViewModel
@@ -71,6 +81,17 @@ public class PacienteActivity extends AppCompatActivity {
             mainViewModel.cargarDatosPaciente(idPacienteACargar, isViewOnly);
         } else {
             Toast.makeText(this, "Error de sesión: ID no encontrado.", Toast.LENGTH_LONG).show();
+        }
+
+        if (!isViewOnly && idPacienteACargar != -1 && !TextUtils.isEmpty(nombrePacienteLogueado)) {
+            // Solo conectar si es el paciente real (no un cuidador viendo)
+            Log.d("PacienteActivity", "Iniciando WebSocketService...");
+            wsService = WebSocketService.getInstance();
+            if (!wsService.isConnected()) {
+                wsService.connect();
+                // Registramos al usuario en el socket
+                wsService.registerUser(String.valueOf(idPacienteACargar));
+            }
         }
         // --- FIN DE LÓGICA DE VIEWMODEL ---
 
@@ -122,6 +143,16 @@ public class PacienteActivity extends AppCompatActivity {
     }
 
     // (Sin cambios)
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (wsService != null && !isViewOnly) {
+            Log.d("PacienteActivity", "Desconectando WebSocketService...");
+            wsService.disconnect();
+        }
+    }
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = ((NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment)).getNavController();
@@ -156,6 +187,9 @@ public class PacienteActivity extends AppCompatActivity {
      * Se llama justo antes de mostrar el menú.
      * Perfecto para ocultar/mostrar items dinámicamente.
      */
+
+
+
     @Override
     public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
         // Asumimos que tu botón de logout tiene el id "action_logout"

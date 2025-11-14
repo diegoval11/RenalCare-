@@ -18,7 +18,7 @@ public class ConversacionRepository {
     private Gson gson;
 
     public ConversacionRepository() {
-        apiService = RetrofitClient.getApiService();
+        apiService = RetrofitClient.getClient().create(ApiService.class);
         gson = new Gson();
     }
 
