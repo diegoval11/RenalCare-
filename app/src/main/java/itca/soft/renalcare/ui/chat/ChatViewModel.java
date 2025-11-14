@@ -24,7 +24,6 @@ public class ChatViewModel extends AndroidViewModel {
     // --- CONSTRUCTOR CORREGIDO ---
     public ChatViewModel(@NonNull Application application) {
         super(application);
-        // Se corrigió el ';' faltante y el ')' extra
         repository = new ChatRepository(application);
         messages.setValue(new ArrayList<>());
         isLoading.setValue(false);
@@ -209,7 +208,13 @@ public class ChatViewModel extends AndroidViewModel {
         if (currentMessages == null) {
             currentMessages = new ArrayList<>();
         }
-        currentMessages.add(mensaje);
-        messages.setValue(currentMessages);
+
+        // --- ¡SOLUCIÓN! ---
+        // 1. Crear una *NUEVA* lista
+        List<ChatMessage> newList = new ArrayList<>(currentMessages);
+        // 2. Añadir el mensaje a la *NUEVA* lista
+        newList.add(mensaje);
+        // 3. Pasar la *NUEVA* lista al LiveData
+        messages.setValue(newList);
     }
 }

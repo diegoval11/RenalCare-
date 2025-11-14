@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-Este es el layout actualizado para CuidadorActivity.
-Contiene los IDs que el archivo CuidadorActivity.java espera.
--->
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -13,16 +9,26 @@ Contiene los IDs que el archivo CuidadorActivity.java espera.
     android:padding="16dp"
     tools:context=".CuidadorActivity">
 
-    <TextView
+    <ProgressBar
+        android:id="@+id/pbLoadingCuidador"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Dashboard Cuidador"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="24dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        android:layout_centerInParent="true"
+        android:visibility="visible" /> <LinearLayout
+    android:id="@+id/layoutAsignacion"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:visibility="gone"
+    tools:visibility="visible"> <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Dashboard Cuidador"
+    android:textSize="24sp"
+    android:textStyle="bold"
+    android:layout_marginBottom="24dp"
+    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
-    <!-- Sección para asignar un nuevo paciente -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -30,7 +36,12 @@ Contiene los IDs que el archivo CuidadorActivity.java espera.
         android:textSize="18sp"
         android:textStyle="bold" />
 
-    <!-- Este es el campo de texto que usa el Java -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Aún no tienes un paciente asignado. Ingresa el DUI de tu paciente para vincularlo."
+        android:layout_marginTop="8dp"/>
+
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -45,7 +56,6 @@ Contiene los IDs que el archivo CuidadorActivity.java espera.
             android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Este es el botón que usa el Java -->
     <Button
         android:id="@+id/btnAsignarPacienteCuidador"
         android:layout_width="match_parent"
@@ -53,7 +63,6 @@ Contiene los IDs que el archivo CuidadorActivity.java espera.
         android:layout_marginTop="16dp"
         android:text="Asignar Paciente" />
 
-    <!-- ¡NUEVO! TextView para feedback -->
     <TextView
         android:id="@+id/tvFeedbackAsignacion"
         android:layout_width="match_parent"
@@ -66,21 +75,6 @@ Contiene los IDs que el archivo CuidadorActivity.java espera.
         tools:visibility="visible"
         tools:text="Paciente 'Maria López' asignado." />
 
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?android:attr/listDivider"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="24dp"/>
-
-    <!-- Placeholder para la futura lista -->
-    <TextView
-        android:id="@+id/tvMisPacientesCuidador"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Mi Paciente (Próximamente)"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
 </LinearLayout>
+
+</RelativeLayout>

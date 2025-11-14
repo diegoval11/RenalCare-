@@ -1,236 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- res/layout/fragment_chat.xml -->
-<androidx.drawerlayout.widget.DrawerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/renal_light_cream"
     tools:context=".ui.chat.ChatFragment">
 
-    <!-- CONTENIDO PRINCIPAL -->
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <!-- Pestañas para cambiar entre Chat IA y Chat Humano -->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/chat_tab_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/renal_light_cream">
+        android:layout_height="wrap_content"
+        android:background="@color/renal_blue_gray"
+        app:tabTextColor="@color/renal_sand_light"
+        app:tabSelectedTextColor="@color/white"
+        app:tabIndicatorColor="@color/renal_sand"
+        app:tabMode="fixed"
+        app:tabGravity="fill"/>
 
-        <!-- Toolbar -->
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/chat_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/renal_blue_gray"
-            android:paddingHorizontal="16dp"
-            app:layout_constraintTop_toTopOf="parent">
+    <!-- Contenedor para los fragmentos de chat (IA y Humano) -->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/chat_view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
-            <ImageButton
-                android:id="@+id/btn_menu"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_menu"
-                app:tint="@color/white"
-                android:contentDescription="Menú"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Chat con Karito"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/icon_info_chat"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_info"
-                app:tint="@color/white"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <!-- ProgressBar -->
-        <ProgressBar
-            android:id="@+id/progress_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@id/chat_toolbar"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="16dp"/>
-
-        <!-- RecyclerView del Chat -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_chat"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:clipToPadding="false"
-            android:padding="8dp"
-            app:layout_constraintBottom_toTopOf="@id/image_preview_container"
-            app:layout_constraintTop_toBottomOf="@id/chat_toolbar"
-            app:layout_constraintVertical_bias="0.0"
-            tools:layout_editor_absoluteX="25dp"
-            tools:listitem="@layout/item_chat_message_received" />
-
-        <!-- Preview de Imagen -->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/image_preview_container"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_margin="8dp"
-            android:visibility="gone"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="4dp"
-            app:layout_constraintBottom_toTopOf="@id/input_bar_layout"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <ImageView
-                android:id="@+id/image_preview"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:contentDescription="Vista previa de imagen"/>
-
-            <ImageButton
-                android:id="@+id/btn_remove_image"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_gravity="end|top"
-                android:layout_margin="4dp"
-                android:background="@drawable/rounded_background_dark_gray"
-                android:src="@android:drawable/ic_menu_close_clear_cancel"
-                app:tint="@color/white"
-                android:contentDescription="Quitar imagen"/>
-
-        </androidx.cardview.widget.CardView>
-
-        <!-- Barra de Input -->
-        <LinearLayout
-            android:id="@+id/input_bar_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="8dp"
-            android:gravity="center_vertical"
-            app:layout_constraintBottom_toBottomOf="parent">
-
-            <ImageButton
-                android:id="@+id/btn_attach"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginEnd="8dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_attach"
-                app:tint="@color/renal_dark_gray"
-                android:contentDescription="Adjuntar imagen"/>
-
-            <EditText
-                android:id="@+id/et_chat_message"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/bg_chat_input_field"
-                android:hint="Escribe tu mensaje..."
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="12dp"
-                android:inputType="textCapSentences|textMultiLine"
-                android:maxLines="4"
-                android:textColor="@color/black"
-                android:textColorHint="@color/renal_dark_gray"/>
-
-            <!--
-                *** BOTÓN DE VOZ MODIFICADO ***
-                - Cambiado a 48dp x 48dp (para ser visible)
-                - Añadido tint de color oscuro (renal_dark_gray)
-                - Añadido margen para separarlo
-            -->
-            <ImageButton
-                android:id="@+id/btn_voice_chat"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginStart="8dp"
-                android:src="@drawable/ic_mic"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                app:tint="@color/renal_dark_gray"
-                android:contentDescription="Iniciar chat de voz" />
-
-            <ImageButton
-                android:id="@+id/btn_send_chat"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginStart="8dp"
-                android:background="@drawable/rounded_background_dark_gray"
-                android:src="@drawable/ic_send"
-                app:tint="@color/white"
-                android:contentDescription="Enviar mensaje"/>
-
-        </LinearLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <!-- DRAWER (HISTORIAL) -->
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/navigation_drawer"
-        android:layout_width="280dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="@color/white">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <!-- Header del Drawer -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                android:gravity="center_vertical"
-                android:background="@color/renal_blue_gray">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Historial"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
-                    android:textStyle="bold"/>
-
-                <ImageButton
-                    android:id="@+id/btn_new_chat"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_add"
-                    app:tint="@color/white"
-                    android:contentDescription="Nueva conversación"/>
-
-            </LinearLayout>
-
-            <!-- Lista de conversaciones -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_history"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:listitem="@layout/item_conversacion"/>
-
-        </LinearLayout>
-
-    </com.google.android.material.navigation.NavigationView>
-
-</androidx.drawerlayout.widget.DrawerLayout>
+</LinearLayout>
