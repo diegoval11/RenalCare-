@@ -34,7 +34,7 @@ public class CuidadorActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
 
     // URL de la API (Asegúrate que sea la correcta)
-    private static final String URL_ASIGNAR_CUIDADOR = "http://192.168.1.12:3000/api/cuidadores/asignarPorDUI";
+    private static final String URL_ASIGNAR_CUIDADOR = "http://192.168.1.163:3000/api/cuidadores/asignarPorDUI";
     // Si usas emulador:
     // private static final String URL_ASIGNAR_CUIDADOR = "http://10.0.2.2:3000/api/cuidadores/asignarPorDUI";
 

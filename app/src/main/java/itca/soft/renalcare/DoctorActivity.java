@@ -31,7 +31,7 @@ public class DoctorActivity extends AppCompatActivity {
 
     // --- ¡CAMBIO CRÍTICO! ---
     // Añadido el prefijo /api/ que vimos en tu server.js
-    private static final String URL_ASIGNAR_DOCTOR = "http://192.168.1.12:3000/api/doctores/asignarPorDUI";
+    private static final String URL_ASIGNAR_DOCTOR = "http://192.168.1.163:3000/api/doctores/asignarPorDUI";
 
     // Si usas un emulador, la URL debería ser:
     // private static final String URL_ASIGNAR_DOCTOR = "http://10.0.2.2:3000/api/doctores/asignarPorDUI";

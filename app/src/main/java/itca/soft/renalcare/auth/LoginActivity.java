@@ -31,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextInputEditText etDui;
     private TextInputEditText etPin;
 
-    private static final String URL_LOGIN = "http://192.168.1.12/wsrenalcare/login.php";
+    private static final String URL_LOGIN = "http://192.168.1.163/wsrenalcare/login.php";
 
     public static final String PREFS_NAME = "RenalCarePrefs";
 

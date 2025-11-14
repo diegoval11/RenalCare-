@@ -33,7 +33,7 @@ public class SignupPatientActivity extends AppCompatActivity {
 
 
 
-    private static final String URL_REGISTRO_WIZARD = "http://192.168.1.12/wsrenalcare/signup_patient_wizard.php"; // ¡NUEVO ENDPOINT!
+    private static final String URL_REGISTRO_WIZARD = "http://192.168.1.163/wsrenalcare/signup_patient_wizard.php"; // ¡NUEVO ENDPOINT!
     private static final int NUM_STEPS = 5;
     private static final String TAG = "SignupActivity";
     private ViewPager2 viewPager;
